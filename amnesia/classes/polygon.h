@@ -4,6 +4,7 @@
 #include <ostream>
 #include <vector>
 #include <utility>
+#include <algorithm>
 #include "vector.h"
 #include "segment.h"
 
@@ -19,14 +20,14 @@ public:
 
     std::vector<Segment> get_sides();
 
-    void move(Vector point);
+    void move(const Vector &point);
 
-    bool collidepoint(Vector point);
+    int collidepoint(Vector point);
 
-    bool colliderangex(double y);
+    std::vector<std::pair<int, int>> colliderangex(double y);
 
     // Operators
-    // friend Polygon operator+(const Polygon &left, const Vector &right);
+    friend Polygon operator+(const Polygon &left, const Vector &right);
     friend std::ostream &operator<<(std::ostream &os, const Polygon &m);
 
 private:
