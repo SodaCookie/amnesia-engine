@@ -1,9 +1,12 @@
 CXX=g++
 CFLAGS=-c -Wall --std=c++11
 OBJECTS=main.o vector.o segment.o polygon.o component.o entity.o lightsource.o
+DEMOOBJECTS=demo.o
+DEMOFLAGS=-c -Wall --std=c++11 -I C:\Users\Eric\Documents\Programming\Libaries\SDL2-2.0.4\include
+BUILDFOLDER=build/
 
 main: $(OBJECTS)
-	$(CXX) -o main $(OBJECTS)
+	$(CXX) -o $(BUILDFOLDER)main $(OBJECTS)
 
 main.o: main.cpp
 	$(CXX) $(CFLAGS) main.cpp
@@ -29,3 +32,10 @@ lightsource.o: amnesia/classes/lightsource.cpp amnesia/classes/lightsource.h
 .PHONY: clean
 clean:
 	rm *.o
+
+.PHONY: demo
+demo: $(OBJECTS) $(DEMOOBJECTS)
+	$(CXX) demo.o vector.o segment.o polygon.o component.o entity.o lightsource.o -L C:\Users\Eric\Documents\Programming\Libaries\SDL2-2.0.4\lib\x86 -lSDL2main -lSDL2 -o $(BUILDFOLDER)demo
+
+demo.o: demo/demo.cpp
+	$(CXX) $(DEMOFLAGS) demo/demo.cpp

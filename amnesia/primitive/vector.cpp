@@ -43,7 +43,8 @@ bool Vector::parallel(const Vector &other) const {
     double epsilon = 0.00001;
     double angle = this->angle(other);
 
-    if (abs(angle) < epsilon || abs(3.14159265358 - angle) < epsilon) {
+    if (std::abs(angle) < epsilon ||
+            std::abs(3.14159265358 - angle) < epsilon) {
         return true;
     }
     return false;

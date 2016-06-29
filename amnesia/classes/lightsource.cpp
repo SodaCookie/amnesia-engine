@@ -16,6 +16,8 @@ void LightSource::move(Vector new_position) {
     position = new_position;
 }
 
+#include "SDL.h"
+
 std::vector<Polygon> LightSource::process(
         std::vector<Polygon> polygons, Polygon view) {
     std::vector<Segment> segments = std::vector<Segment>();
@@ -31,8 +33,16 @@ std::vector<Polygon> LightSource::process(
         }
     }
 
+    // add view to model
+    for (auto point : view.get_vertices()) {
+        points.push_back(point);
+    }
+    for (auto segment : view.get_sides()) {
+        segments.push_back(segment);
+    }
+
     // Create rays to test
-    Vector rel_position = position + owner->transform;
+    Vector rel_position = position;// + owner->transform;
     std::vector<Segment> rays = std::vector<Segment>();
     for (auto point : points) {
         Vector direction = point - rel_position;

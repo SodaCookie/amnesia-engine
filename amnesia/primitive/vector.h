@@ -34,8 +34,8 @@ public:
     // Operators
     friend Vector operator+(const Vector &left, const Vector &right);
     friend Vector operator-(const Vector &left, const Vector &right);
-    friend Vector operator*(const Vector &left, const Vector &right);
-    friend Vector operator/(const Vector &left, const Vector &right);
+    friend Vector operator*(const Vector &left, const Vector &constant);
+    friend Vector operator/(const Vector &left, const Vector &constant);
     friend std::ostream &operator<<(std::ostream &os, const Vector &m);
     friend Vector operator-(const Vector &vector);
 };
