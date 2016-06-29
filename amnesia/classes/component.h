@@ -2,6 +2,8 @@
 #define _AMNESIA_COMPONENT_HEADER_
 
 #include <memory>
+#include <string>
+#include <typeinfo>
 
 class Entity;
 
@@ -19,10 +21,8 @@ public:
 
 protected:
 
-    std::shared_ptr<Entity> entity;
+    std::shared_ptr<Entity> owner;
 
 };
-
-#include "entity.h"
 
 #endif

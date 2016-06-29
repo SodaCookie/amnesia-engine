@@ -17,19 +17,19 @@ public:
     Vector(double x, double y);
     ~Vector() = default;
 
-    double magnitude();
+    double magnitude() const;
 
-    double angle(const Vector &reference);
+    double angle(const Vector &reference) const;
+
+    double dot(const Vector &other) const;
+
+    Vector rotate(double angle) const;
+
+    bool parallel(const Vector &other) const;
+
+    Vector normalized() const;
 
     void set_magitude(double magnitude);
-
-    double dot(const Vector &other);
-
-    Vector rotate(double angle);
-
-    bool parallel(const Vector &other);
-
-    Vector normalized();
 
     // Operators
     friend Vector operator+(const Vector &left, const Vector &right);

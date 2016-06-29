@@ -4,19 +4,23 @@
 #include <memory>
 #include <vector>
 #include <map>
+#include <string>
+#include <typeinfo>
 
 class Component;
 
-class Entity {
+class Entity : public std::enable_shared_from_this<Entity> {
 
 public:
 
-    Entity();
-    Entity(std::vector<Vector> vertices);
+    Entity(std::string name);
     ~Entity() = default;
 
+    std::string get_name();
+
     template <typename T>
-    void add_component(std::shared_ptr<T> component);
+    std::shared_ptr<Component> add_component(
+        std::shared_ptr<Component> component);
 
     template <typename T>
     void remove_component();
@@ -25,19 +29,61 @@ public:
     void remove_components();
 
     template <typename T>
-    bool has_component();
+    int has_component();
+
+    template <typename T>
+    std::shared_ptr<T> get_component();
+
+    template <typename T>
+    std::vector<std::shared_ptr<T>> get_components();
 
     // Operators
     friend std::ostream &operator<<(std::ostream &os, const Entity &m);
 
+
 private:
 
-    std::vector<std::shared_ptr<Component>> components;
-    std::map<std::string, int> type_count;
+    std::map<std::string, std::vector<std::shared_ptr<Component>>> components;
+    std::string name;
+
+    std::shared_ptr<Component> _add_component(
+        std::shared_ptr<Component> component);
 
 };
 
-#include "component.h"
-#include "entity.tpp"
+template <typename T>
+std::shared_ptr<Component> Entity::add_component(
+        std::shared_ptr<Component> component) {
+    return _add_component(component);
+}
+
+template <typename T>
+void Entity::remove_component() {
+    std::string component_type = typeid(T).name();
+    components[component_type].pop_back();
+    if (components.count(component_type) == 0) {
+        components.erase(component_type);
+    }
+}
+
+template <typename T>
+void Entity::remove_components() {
+    components.erase(typeid(T).name());
+}
+
+template <typename T>
+int Entity::has_component() {
+    return components.count(typeid(T).name());
+}
+
+template <typename T>
+std::shared_ptr<T> Entity::get_component() {
+    return components[typeid(T).name()][0];
+}
+
+template <typename T>
+std::vector<std::shared_ptr<T>> Entity::get_components() {
+    return components[typeid(T).name()];
+}
 
 #endif

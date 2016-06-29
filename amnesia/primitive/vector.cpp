@@ -14,11 +14,11 @@ const Vector Vector::right = Vector(0, 1);
 const Vector Vector::left = Vector(0, 1);
 
 //============== Utility =============//
-double Vector::magnitude() {
+double Vector::magnitude() const {
     return std::sqrt(x * x + y * y);
 }
 
-double Vector::angle(const Vector &reference) {
+double Vector::angle(const Vector &reference) const {
     return std::atan2(y, x) - std::atan2(reference.y, reference.x);
 }
 
@@ -29,17 +29,17 @@ void Vector::set_magitude(double magnitude) {
     y *= ratio;
 }
 
-double Vector::dot(const Vector &other) {
+double Vector::dot(const Vector &other) const {
     return x * other.x + y * other.y;
 }
 
-Vector Vector::rotate(double angle) {
+Vector Vector::rotate(double angle) const {
     double new_x = cos(angle) * x - sin(angle) * y;
     double new_y = sin(angle) * x + cos(angle) * y;
     return Vector(new_x, new_y);
 }
 
-bool Vector::parallel(const Vector &other) {
+bool Vector::parallel(const Vector &other) const {
     double epsilon = 0.00001;
     double angle = this->angle(other);
 
@@ -49,7 +49,7 @@ bool Vector::parallel(const Vector &other) {
     return false;
 }
 
-Vector Vector::normalized() {
+Vector Vector::normalized() const {
     double magnitude = this->magnitude();
     return Vector(x / magnitude, y / magnitude);
 }
