@@ -22,7 +22,7 @@ double Vector::angle(const Vector &reference) const {
     return std::atan2(y, x) - std::atan2(reference.y, reference.x);
 }
 
-void Vector::set_magitude(double magnitude) {
+void Vector::set_magnitude(double magnitude) {
     double old_magnitude = this->magnitude();
     double ratio = magnitude / old_magnitude;
     x *= ratio;

@@ -29,7 +29,7 @@ public:
 
     Vector normalized() const;
 
-    void set_magitude(double magnitude);
+    void set_magnitude(double magnitude);
 
     // Operators
     friend Vector operator+(const Vector &left, const Vector &right);
