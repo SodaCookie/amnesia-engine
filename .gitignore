@@ -1,3 +1,6 @@
 *.exe
 *.o
 build/
+amnesia/ocaml-bindings/_build
+app.out
+*.so
