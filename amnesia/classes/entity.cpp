@@ -4,8 +4,8 @@
 Entity::Entity(std::string name) : name(name) {
 }
 
-std::string Entity::get_name() {
-    return name;
+Entity::Entity(std::string name, Vector transform) :
+    name(name), transform(transform) {
 }
 
 std::shared_ptr<Component> Entity::_add_component(

@@ -6,6 +6,7 @@
 #include <map>
 #include <string>
 #include <typeinfo>
+#include "../primitive/vector.h"
 
 class Component;
 
@@ -13,10 +14,12 @@ class Entity : public std::enable_shared_from_this<Entity> {
 
 public:
 
-    Entity(std::string name);
-    ~Entity() = default;
+    std::string name;
+    Vector transform;
 
-    std::string get_name();
+    Entity(std::string name);
+    Entity(std::string name, Vector transform);
+    ~Entity() = default;
 
     template <typename T>
     std::shared_ptr<Component> add_component(
@@ -44,7 +47,6 @@ public:
 private:
 
     std::map<std::string, std::vector<std::shared_ptr<Component>>> components;
-    std::string name;
 
     std::shared_ptr<Component> _add_component(
         std::shared_ptr<Component> component);

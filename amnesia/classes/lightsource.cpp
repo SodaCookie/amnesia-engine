@@ -1,14 +1,15 @@
 #include "../primitive/segment.h"
+#include "entity.h"
 #include "lightsource.h"
 #include <utility>
 #include <algorithm>
 #include <limits>
 
-LightSource::LightSource() {
+LightSource::LightSource() : Component() {
 }
 
 LightSource::LightSource(Vector position, double radius, double strength) :
-    position(position), radius(radius), strenth(strength) {
+    Component(), position(position), radius(radius), strength(strength) {
 }
 
 void LightSource::move(Vector new_position) {
@@ -22,16 +23,16 @@ std::vector<Polygon> LightSource::process(
 
     // Add current points and segments
     for (auto polygon : polygons) {
-        for (auto point : polygon.points) {
+        for (auto point : polygon.get_vertices()) {
             points.push_back(point);
         }
-        for (auto segment : polygon.segments) {
+        for (auto segment : polygon.get_sides()) {
             segments.push_back(segment);
         }
     }
 
     // Create rays to test
-    Vector rel_position = position + owner.position;
+    Vector rel_position = position + owner->transform;
     std::vector<Segment> rays = std::vector<Segment>();
     for (auto point : points) {
         Vector direction = point - rel_position;
@@ -50,15 +51,16 @@ std::vector<Polygon> LightSource::process(
     std::vector<Vector> intersections = std::vector<Vector>();
     for (auto ray : rays) {
         std::pair<bool, Vector> closest_intersection (false, Vector());
-        int closest_magnitude = INT_MAX;
+        double closest_magnitude = std::numeric_limits<double>::max();
         for (auto segment : segments) {
-            std::pair<bool, Vector> intersect = segment.intersect_ray(ray)
+            std::pair<bool, Vector> intersect = segment.intersect_ray(ray);
             if (intersect.first) {
                 Vector distance = intersect.second - rel_position;
                 if (!closest_intersection.first or
-                        distance.magnitude() <= closest_magnitude):
+                        distance.magnitude() <= closest_magnitude){
                     closest_intersection = std::make_pair(true, distance);
                     closest_magnitude = distance.magnitude();
+                }
             }
         }
         if (closest_intersection.first) {
@@ -67,17 +69,20 @@ std::vector<Polygon> LightSource::process(
     }
 
     // Sort intersects by angle
-    std::sort(intersections.begin(), intersection.end(),
+    std::sort(intersections.begin(), intersections.end(),
         [] (const Vector &i, const Vector &j) -> bool {
             return i.angle(Vector::right) < j.angle(Vector::right);
         });
 
     // Calculate light blocks
     std::vector<Polygon> blocks = std::vector<Polygon>();
-    for (int i = 0; i < intersections.size(); i++) {
-        blocks.push_back(Polygon(rel_position,
-            intersections[i] + rel_position,
-            intersections[(i+1) % intersections.size()] + rel_position));
+    for (unsigned int i = 0; i < intersections.size(); i++) {
+        std::vector<Vector> triangle_points = std::vector<Vector>();
+        triangle_points.push_back(rel_position);
+        triangle_points.push_back(intersections[i] + rel_position);
+        triangle_points.push_back(
+            intersections[(i+1) % intersections.size()] + rel_position);
+        blocks.push_back(Polygon(triangle_points));
     }
 
     return blocks;

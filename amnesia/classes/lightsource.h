@@ -1,5 +1,5 @@
-#ifndef _AMNESIA_COMPONENT_HEADER_
-#define _AMNESIA_COMPONENT_HEADER_
+#ifndef _AMNESIA_LIGHTSOURCE_HEADER_
+#define _AMNESIA_LIGHTSOURCE_HEADER_
 
 #include "../primitive/vector.h"
 #include "../primitive/polygon.h"
