@@ -7,30 +7,31 @@
 #include "message.h"
 #include "../classes/entity.h"
 
-class Engine;
+class GameEngine;
 
 class System {
 
 public:
 
-    System(std::string name, std::shared_ptr<Engine> engine);
+    friend class Engine;
 
-    virtual void init(std::vector<std::shared_ptr<Entity>> entities) = 0;
+    System(std::string name);
 
-    virtual void update(double delta,
-        std::vector<std::shared_ptr<Entity>> entities) = 0;
+    virtual void init() = 0;
 
-    virtual void quit(std::vector<std::shared_ptr<Entity>> entities) = 0;
+    virtual void update() = 0;
 
-    void add_message(std::unique_ptr<IMessage> message);
+    virtual void quit() = 0;
+
+    void add_message(std::shared_ptr<IMessage> message);
 
 protected:
 
-    std::shared_ptr<Engine> engine;
-    std::vector<std::unique_ptr<IMessage>> messages;
+    std::shared_ptr<GameEngine> Engine;
+    std::vector<std::shared_ptr<IMessage>> messages;
     std::string name;
 
-    std::vector<std::unique_ptr<IMessage>> flush_messages();
+    std::vector<std::shared_ptr<IMessage>> flush_messages();
 
 };
 
