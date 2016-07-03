@@ -4,6 +4,7 @@
 #include <memory>
 #include <string>
 #include <typeinfo>
+#include <ostream>
 
 class Entity;
 

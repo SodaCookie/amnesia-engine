@@ -15,15 +15,25 @@ Segment *create_segment(Vector *anchor, Vector *direction) {
 }
 void destroy_segment(Segment *s) { delete s; }
 
-std::pair<bool, Vector *> *intersect_segment(Segment *first, Segment *second) {
+Vector *segment_get_anchor(Segment *segment) {
+  Vector v = segment->anchor;
+  return new Vector(v.x, v.y);
+}
+
+Vector *segment_get_direction(Segment *segment) {
+  Vector v = segment->direction;
+  return new Vector(v.x, v.y);
+}
+
+std::pair<bool, Vector *> *segment_intersect_segment(Segment *first, Segment *second) {
   return to_heap_ptr(first->intersect_segment(*second));
 }
 
-std::pair<bool, Vector *> *intersect_ray(Segment *first, Segment *second) {
+std::pair<bool, Vector *> *segment_intersect_ray(Segment *first, Segment *second) {
   return to_heap_ptr(first->intersect_ray(*second));
 }
 
-std::pair<bool, Vector *> *intersect_line(Segment *first, Segment *second) {
+std::pair<bool, Vector *> *segment_intersect_line(Segment *first, Segment *second) {
   return to_heap_ptr(first->intersect_line(*second));
 }
 }

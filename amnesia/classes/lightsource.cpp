@@ -16,8 +16,6 @@ void LightSource::move(Vector new_position) {
     position = new_position;
 }
 
-#include "SDL.h"
-
 std::vector<Polygon> LightSource::process(
         std::vector<Polygon> polygons, Polygon view) {
     std::vector<Segment> segments = std::vector<Segment>();
