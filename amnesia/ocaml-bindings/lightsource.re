@@ -46,5 +46,5 @@ let process lightsource::lightsource objects::objects view::view => {
   let poly = make std_vector;
   process_helper lightsource start len view (addr poly);
   let ret = CArray.from_ptr (elements (ptr Polygon.polygonT) poly) (vec_size poly);
-  ret
+  CArray.to_list ret
 }

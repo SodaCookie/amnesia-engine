@@ -40,7 +40,7 @@ let get_vertices poly => {
   let v = make std_vector;
   get_vertices_helper poly (addr v);
   let ret = CArray.from_ptr (elements (ptr Vector.vectorT) v) (vec_size v);
-  ret
+  CArray.to_list ret
 };
 
 let get_sides_helper =
@@ -50,11 +50,10 @@ let get_sides poly => {
   let v = make std_vector;
   get_sides_helper poly (addr v);
   let ret = CArray.from_ptr (elements (ptr Segment.segmentT) v) (vec_size v);
-  ret
+  CArray.to_list ret
 };
 
-let vertices_to_string a => {
-  let bla = CArray.to_list a;
+let vertices_to_string bla => {
   switch bla {
   | [] => ""
   | [el] => Vector.to_string el
@@ -66,8 +65,7 @@ let vertices_to_string a => {
   }
 };
 
-let segments_to_string a => {
-  let bla = CArray.to_list a;
+let segments_to_string bla => {
   switch bla {
   | [] => ""
   | [el] => Segment.to_string el
@@ -79,8 +77,8 @@ let segments_to_string a => {
   }
 };
 
-let list_to_string a => {
-  let bla = Ctypes.CArray.to_list a;
+/* let list_to_string a => {
+  let bla = CArray.to_list a;
   switch bla {
   | [] => ""
   | [el] => vertices_to_string (get_vertices el)
@@ -90,4 +88,4 @@ let list_to_string a => {
       List.fold_left (fun acc cur => acc ^ ", " ^ vertices_to_string (get_vertices cur)) "" rest ^
       "]"
   }
-};
+}; */

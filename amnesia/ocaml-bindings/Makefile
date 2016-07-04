@@ -1,10 +1,10 @@
 app.out: main.cmo vector.cmo maybe.cmo segment.cmo polygon.cmo libvector.so libpolygon.so liblightsource.so libmaybe.so libsegment.so
-	  ocamlfind ocamlc -o _build/app.out -I _build -linkpkg -custom -package ctypes.foreign \
+	  ocamlfind ocamlc -o _build/app.out -I _build -linkpkg -custom -package ctypes.foreign -package lablgl.glut \
 	    -cclib -L. -cclib -lvector -cclib -lsegment -cclib -lmaybe -cclib -lpolygon -cclib -llightsource \
 			_build/vector.cmo _build/maybe.cmo _build/segment.cmo _build/polygon.cmo _build/lightsource.cmo _build/main.cmo
 
 main.cmo: main.re vector.cmo maybe.cmo segment.cmo polygon.cmo lightsource.cmo
-		ocamlfind ocamlc -c -pp refmt -I _build -impl main.re
+		ocamlfind ocamlc -c -package lablgl.glut -pp refmt -I _build -impl main.re
 		mv main.cm* _build/
 
 lightsource.cmo: liblightsource.so polygon.cmo vector.cmo lightsource.re
