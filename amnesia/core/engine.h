@@ -6,6 +6,7 @@
 #include <map>
 #include <memory>
 #include "window.h"
+#include "time.h"
 #include "input.h"
 #include "message.h"
 #include "../classes/entity.h"
@@ -22,7 +23,7 @@ public:
 
     void add_entity(Entity e);
 
-    &Entity find(std::string name);
+    Entity& find(std::string name);
 
     void message(std::string system, std::shared_ptr<IMessage> message);
 

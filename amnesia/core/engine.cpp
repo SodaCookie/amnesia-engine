@@ -15,7 +15,7 @@ void Engine::add_entity(Entity e) {
     Entities[e.name] = e;
 }
 
-&Entity Engine::find(std::string name) {
+Entity& Engine::find(std::string name) {
     return Entities[name];
 }
 

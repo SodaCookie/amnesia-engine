@@ -1,12 +1,12 @@
 CXX=g++
 CFLAGS=-c -Wall --std=c++11
-OBJECTS=main.o vector.o segment.o polygon.o component.o entity.o lightsource.o system.o
+OBJECTS=main.o vector.o segment.o polygon.o component.o entity.o lightsource.o system.o input.o window.o time.o
 SDLFLAGS=-I C:\Users\Eric\Documents\Programming\Libaries\SDL2-2.0.4\include -L C:\Users\Eric\Documents\Programming\Libaries\SDL2-2.0.4\lib\x86 -lSDL2main -lSDL2
 DEMOOBJECTS=demo.o
 BUILDFOLDER=build/
 
 main: $(OBJECTS)
-	$(CXX) -o $(BUILDFOLDER)main $(OBJECTS)
+	$(CXX) -o $(BUILDFOLDER)main $(OBJECTS) $(SDLFLAGS)
 
 main.o: main.cpp
 	$(CXX) $(CFLAGS) $(SDLFLAGS) main.cpp
@@ -31,6 +31,15 @@ lightsource.o: amnesia/classes/lightsource.cpp amnesia/classes/lightsource.h
 
 system.o: amnesia/core/system.cpp amnesia/core/system.h
 	$(CXX) $(CFLAGS) amnesia/core/system.cpp
+
+input.o: amnesia/core/input.cpp amnesia/core/input.h
+	$(CXX) $(CFLAGS) $(SDLFLAGS) amnesia/core/input.cpp
+
+window.o: amnesia/core/window.cpp amnesia/core/window.h
+	$(CXX) $(CFLAGS) $(SDLFLAGS) amnesia/core/window.cpp
+
+time.o: amnesia/core/time.cpp amnesia/core/time.h
+	$(CXX) $(CFLAGS) $(SDLFLAGS) amnesia/core/time.cpp
 
 .PHONY: clean
 clean:
