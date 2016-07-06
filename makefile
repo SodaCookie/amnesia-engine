@@ -1,12 +1,12 @@
 CXX=g++
-CFLAGS=-c -Wall --std=c++11
+CFLAGS=-c -Wall --std=c++11 -pg
 OBJECTS=main.o vector.o segment.o polygon.o component.o entity.o lightsource.o system.o input.o window.o time.o
-SDLFLAGS=-I C:\Users\Eric\Documents\Programming\Libaries\SDL2-2.0.4\include -L C:\Users\Eric\Documents\Programming\Libaries\SDL2-2.0.4\lib\x86 -lSDL2main -lSDL2
+SDLFLAGS=-I C:\Users\Eric\Documents\Programming\Libaries\SDL2-2.0.4\x86_64-w64-mingw32\include -L C:\Users\Eric\Documents\Programming\Libaries\SDL2-2.0.4\x86_64-w64-mingw32\lib -lSDL2main -lSDL2 -lmingw32
 DEMOOBJECTS=demo.o
 BUILDFOLDER=build/
 
 main: $(OBJECTS)
-	$(CXX) -o $(BUILDFOLDER)main $(OBJECTS) $(SDLFLAGS)
+	$(CXX) -o $(BUILDFOLDER)main $(OBJECTS) $(SDLFLAGS) -pg
 
 main.o: main.cpp
 	$(CXX) $(CFLAGS) $(SDLFLAGS) main.cpp
@@ -47,7 +47,7 @@ clean:
 
 .PHONY: demo
 demo: $(OBJECTS) $(DEMOOBJECTS)
-	$(CXX) $(DEMOOBJECTS) $(OBJECTS) $(CFLAGS) $(SDLFLAGS) -o $(BUILDFOLDER)demo
+	$(CXX) $(DEMOOBJECTS) $(OBJECTS) $(CFLAGS) $(SDLFLAGS) -o $(BUILDFOLDER)demo.exe
 
 demo.o: demo/demo.cpp
 	$(CXX) $(CFLAGS) $(SDLFLAGS) demo/demo.cpp
