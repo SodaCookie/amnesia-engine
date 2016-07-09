@@ -118,22 +118,22 @@ let render gameState::gameState () => {
   let light =
     Lightsource.create_lightsource (create_vector (float_of_int x) (float_of_int y)) 200. 1.;
   createLightsourceTime := !createLightsourceTime +. (Unix.gettimeofday () -. prevTime);
-  /* let light2 =
+  let light2 =
      Lightsource.create_lightsource
-       (create_vector (float_of_int (x + 300)) (float_of_int y)) 200. 1.; */
+       (create_vector (float_of_int (x + 300)) (float_of_int y)) 200. 1.;
   /* let prevTime = Unix.gettimeofday (); */
   let polygonList = Lightsource.process lightsource::light objects::!arrayOfPolygons view::view;
   /* processTime := !processTime +. (Unix.gettimeofday () -. prevTime); */
-  /* let polygonList2 = Lightsource.process lightsource::light2 objects::!arrayOfPolygons view::view; */
+  let polygonList2 = Lightsource.process lightsource::light2 objects::!arrayOfPolygons view::view;
   ignore @@ List.map (fun p => drawPolygon filled::true polygon::p color::(1., 1., 1.)) polygonList;
-  /* ignore @@
-     List.map (fun p => drawPolygon filled::true polygon::p color::(1., 1., 1.)) polygonList2; */
+  ignore @@
+     List.map (fun p => drawPolygon filled::true polygon::p color::(1., 1., 1.)) polygonList2;
   ignore @@
     List.map (fun p => drawPolygon filled::false polygon::p color::(0., 1., 0.)) polygonList;
-  /* ignore @@
-     List.map (fun p => drawPolygon filled::false polygon::p color::(0., 1., 0.)) polygonList2; */
+  ignore @@
+     List.map (fun p => drawPolygon filled::false polygon::p color::(0., 1., 0.)) polygonList2;
   drawCircle radius::4 color::(1., 0., 0.) position::(GCoord {x, y});
-  /* drawCircle radius::4 color::(1., 0., 0.) position::(GCoord {x: x + 300, y}); */
+  drawCircle radius::4 color::(1., 0., 0.) position::(GCoord {x: x + 300, y});
   Glut.swapBuffers ()
 };
 

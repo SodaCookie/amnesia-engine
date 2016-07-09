@@ -38,7 +38,7 @@ public:
 
 private:
 
-    std::map<std::string, std::shared_ptr<System>> systems;
+    std::map<std::string, std::shared_ptr <System> > systems;
     bool running = false;
 
 };
