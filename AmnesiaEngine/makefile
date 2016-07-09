@@ -1,12 +1,14 @@
 CXX=g++
-CFLAGS=-c -Wall --std=c++11 -pg -g
+CFLAGS=-c -Wall --std=c++11 -pg -g -stdlib=libc++
+LFLAGS=-Wall --std=c++11 -pg -g -stdlib=libc++
 OBJECTS=$(patsubst %.o, $(BUILDFOLDER)/%.o, main.o vector.o segment.o polygon.o component.o entity.o lightsource.o system.o input.o window.o time.o engine.o)
 SDLFLAGS=-lSDL2main -lSDL2
+STATICLIBNAME=libamnesia.a
 DEMOOBJECTS=demo.o
 BUILDFOLDER=build
 
 main: $(BUILDFOLDER) $(OBJECTS)
-	$(CXX) -o main $(OBJECTS) $(SDLFLAGS) -pg -g
+	$(CXX) -o $(BUILDFOLDER)/main $(OBJECTS) $(SDLFLAGS) $(LFLAGS)
 
 $(BUILDFOLDER)/main.o: main.cpp
 	$(CXX) $(CFLAGS) $(SDLFLAGS) main.cpp -o $@
@@ -46,6 +48,10 @@ $(BUILDFOLDER)/time.o: amnesia/core/time.cpp amnesia/core/time.h
 
 $(BUILDFOLDER):
 	mkdir $(BUILDFOLDER)
+
+.PHONY: static
+static: $(BUILDFOLDER) $(OBJECTS)
+	ar rcs ./$(BUILDFOLDER)/$(STATICLIBNAME) $^
 
 .PHONY: clean
 clean:
