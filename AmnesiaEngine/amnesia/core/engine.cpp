@@ -51,6 +51,7 @@ void GameEngine::run() {
             system.second->update();
         }
         Window.flip();
+        Time.delay();
     }
 
     // Quit

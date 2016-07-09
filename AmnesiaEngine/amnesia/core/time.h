@@ -8,6 +8,7 @@ class TimeSystem : public System {
 public:
 
     double delta;
+    int frames;
 
     TimeSystem();
 
@@ -16,6 +17,8 @@ public:
     virtual void update() override;
 
     virtual void quit() override;
+
+    void delay();
 
 };
 
