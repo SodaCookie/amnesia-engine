@@ -17,13 +17,13 @@ class GameEngine : public std::enable_shared_from_this<GameEngine> {
 
 public:
 
-    void Engine();
+    GameEngine();
 
     void add_system(std::shared_ptr<System> system);
 
-    void add_entity(Entity e);
+    void add_entity(std::shared_ptr<Entity> e);
 
-    Entity& find(std::string name);
+    std::shared_ptr<Entity> find(std::string name);
 
     void message(std::string system, std::shared_ptr<IMessage> message);
 
@@ -34,12 +34,12 @@ public:
     WindowSystem Window;
     InputSystem Input;
     TimeSystem Time;
-    std::map<std::string, Entity> Entities;
+    std::map<std::string, std::shared_ptr<Entity>> Entities;
 
 private:
 
-    std::map<std::string, std::shared_ptr <System> > systems;
-    bool running = false;
+    std::map<std::string, std::shared_ptr<System>> systems;
+    bool running;
 
 };
 

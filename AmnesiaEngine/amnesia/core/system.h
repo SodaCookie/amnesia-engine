@@ -13,7 +13,7 @@ class System {
 
 public:
 
-    friend class Engine;
+    friend class GameEngine;
 
     System(std::string name);
 

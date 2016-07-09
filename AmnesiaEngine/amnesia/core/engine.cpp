@@ -1,30 +1,36 @@
 #include "engine.h"
 
-Engine::Engine() {
-    Window = WindowSystem(640, 480);
+GameEngine::GameEngine() {
+    Window = WindowSystem();
     Input = InputSystem();
     Time = TimeSystem();
+    running = false;
 }
 
-void Engine::add_system(std::shared_ptr<System> system) {
-    system->engine = shared_from_this();
+void GameEngine::add_system(std::shared_ptr<System> system) {
+    system->Engine = shared_from_this();
     systems[system->name] = system;
 }
 
-void Engine::add_entity(Entity e) {
-    Entities[e.name] = e;
+void GameEngine::add_entity(std::shared_ptr<Entity> e) {
+    Entities[e->name] = e;
 }
 
-Entity& Engine::find(std::string name) {
+std::shared_ptr<Entity> GameEngine::find(std::string name) {
     return Entities[name];
 }
 
-void Engine::message(std::string system, std::shared_ptr<IMessage> message) {
+void GameEngine::message(std::string system, std::shared_ptr<IMessage> message) {
     systems[system]->add_message(message);
 }
 
-void Engine::run() {
-    running = true;
+void GameEngine::run() {
+    this->running = true;
+
+    // Attach Engine to standard systems
+    Window.Engine = shared_from_this();
+    Input.Engine = shared_from_this();
+    Time.Engine = shared_from_this();
 
     // Initiate
     Window.init();
@@ -32,7 +38,7 @@ void Engine::run() {
     Time.init();
 
     for (auto system : systems) {
-        system->init();
+        system.second->init();
     }
 
     // Main Game Loop
@@ -42,21 +48,21 @@ void Engine::run() {
         Input.update();
         Time.update();
         for (auto system : systems) {
-            system->update();
+            system.second->update();
         }
         Window.flip();
     }
 
     // Quit
     for (auto system : systems) {
-        system->quit();
+        system.second->quit();
     }
 
-    Window.quit();
-    Input.quit();
     Time.quit();
+    Input.quit();
+    Window.quit();
 }
 
-void Engine::quit() {
-    running = false;
+void GameEngine::quit() {
+    this->running = false;
 }

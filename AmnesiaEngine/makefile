@@ -1,45 +1,48 @@
 CXX=g++
-CFLAGS=-c -Wall --std=c++11 -pg
-OBJECTS=main.o vector.o segment.o polygon.o component.o entity.o lightsource.o system.o input.o window.o time.o
+CFLAGS=-c -Wall --std=c++11 -pg -g
+OBJECTS=$(patsubst %.o, $(BUILDFOLDER)/%.o, main.o vector.o segment.o polygon.o component.o entity.o lightsource.o system.o input.o window.o time.o engine.o)
 SDLFLAGS=-lSDL2main -lSDL2
 DEMOOBJECTS=demo.o
 BUILDFOLDER=build
 
 main: $(BUILDFOLDER) $(OBJECTS)
-	$(CXX) -o main $(patsubst %.o, $(BUILDFOLDER)/%.o, $(OBJECTS)) $(SDLFLAGS) -pg
+	$(CXX) -o main $(OBJECTS) $(SDLFLAGS) -pg -g
 
-main.o: main.cpp
-	$(CXX) $(CFLAGS) $(SDLFLAGS) main.cpp -o $(BUILDFOLDER)/$@
+$(BUILDFOLDER)/main.o: main.cpp
+	$(CXX) $(CFLAGS) $(SDLFLAGS) main.cpp -o $@
 
-segment.o: amnesia/primitive/segment.cpp amnesia/primitive/segment.h
-	$(CXX) $(CFLAGS) amnesia/primitive/segment.cpp -o $(BUILDFOLDER)/$@
+$(BUILDFOLDER)/segment.o: amnesia/primitive/segment.cpp amnesia/primitive/segment.h
+	$(CXX) $(CFLAGS) amnesia/primitive/segment.cpp -o $@
 
-vector.o: amnesia/primitive/vector.cpp amnesia/primitive/vector.h
-	$(CXX) $(CFLAGS) amnesia/primitive/vector.cpp  -o $(BUILDFOLDER)/$@
+$(BUILDFOLDER)/vector.o: amnesia/primitive/vector.cpp amnesia/primitive/vector.h
+	$(CXX) $(CFLAGS) amnesia/primitive/vector.cpp  -o $@
 
-polygon.o: amnesia/primitive/polygon.cpp amnesia/primitive/polygon.h
-	$(CXX) $(CFLAGS) amnesia/primitive/polygon.cpp -o $(BUILDFOLDER)/$@
+$(BUILDFOLDER)/polygon.o: amnesia/primitive/polygon.cpp amnesia/primitive/polygon.h
+	$(CXX) $(CFLAGS) amnesia/primitive/polygon.cpp -o $@
 
-component.o: amnesia/classes/component.cpp amnesia/classes/component.h
-	$(CXX) $(CFLAGS) amnesia/classes/component.cpp -o $(BUILDFOLDER)/$@
+$(BUILDFOLDER)/component.o: amnesia/classes/component.cpp amnesia/classes/component.h
+	$(CXX) $(CFLAGS) amnesia/classes/component.cpp -o $@
 
-entity.o: amnesia/classes/entity.cpp amnesia/classes/entity.h
-	$(CXX) $(CFLAGS) amnesia/classes/entity.cpp -o $(BUILDFOLDER)/$@
+$(BUILDFOLDER)/entity.o: amnesia/classes/entity.cpp amnesia/classes/entity.h
+	$(CXX) $(CFLAGS) amnesia/classes/entity.cpp -o $@
 
-lightsource.o: amnesia/classes/lightsource.cpp amnesia/classes/lightsource.h
-	$(CXX) $(CFLAGS) $(SDLFLAGS) amnesia/classes/lightsource.cpp -o $(BUILDFOLDER)/$@
+$(BUILDFOLDER)/lightsource.o: amnesia/classes/lightsource.cpp amnesia/classes/lightsource.h
+	$(CXX) $(CFLAGS) $(SDLFLAGS) amnesia/classes/lightsource.cpp -o $@
 
-system.o: amnesia/core/system.cpp amnesia/core/system.h
-	$(CXX) $(CFLAGS) amnesia/core/system.cpp -o $(BUILDFOLDER)/$@
+$(BUILDFOLDER)/engine.o: amnesia/core/engine.cpp amnesia/core/engine.h
+	$(CXX) $(CFLAGS) $(SDLFLAGS) amnesia/core/engine.cpp -o $@
 
-input.o: amnesia/core/input.cpp amnesia/core/input.h
-	$(CXX) $(CFLAGS) $(SDLFLAGS) amnesia/core/input.cpp -o $(BUILDFOLDER)/$@
+$(BUILDFOLDER)/system.o: amnesia/core/system.cpp amnesia/core/system.h
+	$(CXX) $(CFLAGS) amnesia/core/system.cpp -o $@
 
-window.o: amnesia/core/window.cpp amnesia/core/window.h
-	$(CXX) $(CFLAGS) $(SDLFLAGS) amnesia/core/window.cpp -o $(BUILDFOLDER)/$@
+$(BUILDFOLDER)/input.o: amnesia/core/input.cpp amnesia/core/input.h
+	$(CXX) $(CFLAGS) $(SDLFLAGS) amnesia/core/input.cpp -o $@
 
-time.o: amnesia/core/time.cpp amnesia/core/time.h
-	$(CXX) $(CFLAGS) $(SDLFLAGS) amnesia/core/time.cpp -o $(BUILDFOLDER)/$@
+$(BUILDFOLDER)/window.o: amnesia/core/window.cpp amnesia/core/window.h
+	$(CXX) $(CFLAGS) $(SDLFLAGS) amnesia/core/window.cpp -o $@
+
+$(BUILDFOLDER)/time.o: amnesia/core/time.cpp amnesia/core/time.h
+	$(CXX) $(CFLAGS) $(SDLFLAGS) amnesia/core/time.cpp -o $@
 
 $(BUILDFOLDER):
 	mkdir $(BUILDFOLDER)

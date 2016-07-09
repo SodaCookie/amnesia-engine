@@ -15,8 +15,8 @@ void WindowSystem::update() {
 }
 
 void WindowSystem::quit() {
-    SDL_DestroyWindow(display);
     SDL_FreeSurface(surface);
+    SDL_DestroyWindow(display);
 }
 
 void WindowSystem::flip() {
