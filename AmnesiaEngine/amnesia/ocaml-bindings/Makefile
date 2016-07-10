@@ -1,6 +1,9 @@
-app.out: main.cmo vector.cmo maybe.cmo segment.cmo polygon.cmo libvector.so libpolygon.so liblightsource.so libmaybe.so libsegment.so
-	  ocamlfind ocamlc -o _build/app.out -I _build -linkpkg -custom -package ctypes.foreign -package lablgl.glut \
-	    -cclib -L. -cclib -lvector -cclib -lsegment -cclib -lmaybe -cclib -lpolygon -cclib -llightsource \
+INCLUDES=-I`ocamlc -where`
+
+app.out: _build main.cmo vector.cmo maybe.cmo segment.cmo polygon.cmo libvector.so libpolygon.so liblightsource.so libmaybe.so libsegment.so
+	  ocamlfind ocamlc -o _build/app.out -cc clang++ -ccopt '-lc++ --std=c++11 -stdlib=libc++' -I _build -I ../../_build -linkpkg -custom -package ctypes.foreign -package lablgl.glut \
+	    -cclib -L. -cclib -lvector -cclib -lsegment -cclib -lmaybe -cclib -lpolygon -cclib -llightsource -cclib -lSDL2 \
+			../../_build/libamnesia.a  \
 			_build/vector.cmo _build/maybe.cmo _build/segment.cmo _build/polygon.cmo _build/lightsource.cmo _build/main.cmo
 
 main.cmo: main.re vector.cmo maybe.cmo segment.cmo polygon.cmo lightsource.cmo
@@ -27,23 +30,23 @@ vector.cmo: libvector.so vector.re
 		ocamlfind ocamlc -c -pp refmt -I _build -package ctypes.foreign -impl vector.re
 		mv vector.cm* _build/
 
-libvector.so: _build vector.cpp ../primitive/vector.cpp
-		clang++ -stdlib=libc++ -std=c++11 -shared -fPIC -pedantic -W -Wall vector.cpp -o libvector.so
+libvector.so: vector.cpp ../primitive/vector.cpp
+		clang++ -c -stdlib=libc++ -std=c++11 -fPIC -pedantic -W -Wall -Wextra -I/usr/local/include $(INCLUDES) vector.cpp -o _build/libvector.so
 
-libsegment.so: _build segment.cpp ../primitive/segment.cpp
-		clang++ -stdlib=libc++ -std=c++11 -shared -fPIC -pedantic -W -Wall segment.cpp -o libsegment.so
+libsegment.so: segment.cpp ../primitive/segment.cpp
+		clang++ -c -stdlib=libc++ -std=c++11 -fPIC -pedantic -W -Wall -Wextra segment.cpp -o _build/libsegment.so
 
-libmaybe.so: _build maybe.cpp
-		clang++ -stdlib=libc++ -std=c++11 -shared -fPIC -pedantic -W -Wall maybe.cpp -o libmaybe.so
+libmaybe.so: maybe.cpp
+		clang++ -c -stdlib=libc++ -std=c++11 -fPIC -pedantic -W -Wall -Wextra maybe.cpp -o _build/libmaybe.so
 
-libpolygon.so: _build polygon.cpp ../primitive/polygon.cpp
-		clang++ -stdlib=libc++ -std=c++11 -shared -fPIC -pedantic -W -Wall -L ./_build -I ./_build polygon.cpp -o libpolygon.so
+libpolygon.so: polygon.cpp ../primitive/polygon.cpp ../primitive/vector.cpp
+		clang++ -c -stdlib=libc++ -std=c++11 -fPIC -pedantic -W -Wall -Wextra -I ./_build -I ../../_build polygon.cpp -o _build/libpolygon.so
 
-liblightsource.so: _build lightsource.cpp ../primitive/vector.cpp ../primitive/segment.cpp ../primitive/polygon.cpp ../classes/lightsource.cpp ../classes/component.cpp
-		clang++ -stdlib=libc++ -std=c++11 -shared -fPIC -pedantic -W -Wall -L ./_build -I ./_build lightsource.cpp ../primitive/vector.cpp ../primitive/segment.cpp ../primitive/polygon.cpp ../classes/component.cpp ../classes/lightsource.cpp -o liblightsource.so
+liblightsource.so: lightsource.cpp ../primitive/vector.cpp ../primitive/segment.cpp ../primitive/polygon.cpp ../classes/lightsource.cpp ../classes/component.cpp
+		clang++ -c -stdlib=libc++ -std=c++11 -fPIC -pedantic -W -Wall -Wextra -I ./_build lightsource.cpp -o _build/liblightsource.so
 
 _build:
 		mkdir -p _build
 
 clean:
-		rm -rf _build libvector.so libmaybe.so libsegment.so libpolygon.so liblightsource.so
+		rm -rf _build

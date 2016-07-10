@@ -1,1 +1,3 @@
-**/*_build
+AmnesiaEngine/_build
+AmnesiaEngine/amnesia/ocaml-bindings/_build
+.vs

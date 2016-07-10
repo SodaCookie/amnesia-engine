@@ -1,8 +1,22 @@
-#include "../primitive/vector.cpp"
+#include "../primitive/vector.h"
+#include <iostream>
+#include <caml/mlvalues.h>
+#include <caml/memory.h>
+#include <caml/alloc.h>
+#include <caml/custom.h>
+
+void addch(int x) {
+  std::cout << "heyo " << x << std::endl;
+}
 
 Vector *to_heap_ptr(Vector v) { return new Vector(v.x, v.y); }
 
 extern "C" {
+  CAMLprim value caml_curses_addch(value c) {
+    CAMLparam1 (c);
+    addch(Int_val(c));            /* Characters are encoded like integers */
+    CAMLreturn (Val_unit);
+  }
 Vector *create_vector(double x, double y) { return new Vector(x, y); }
 void destroy_vector(Vector *s) { delete s; }
 double vector_magnitude(Vector *v) { return v->magnitude(); }

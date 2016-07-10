@@ -1,5 +1,5 @@
-#include "../primitive/segment.cpp"
-#include "../primitive/vector.cpp"
+#include "../primitive/segment.h"
+#include "../primitive/vector.h"
 
 std::pair<bool, Vector *> *to_heap_ptr(std::pair<bool, Vector> v) {
   Vector *v2 = nullptr;

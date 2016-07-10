@@ -1,6 +1,6 @@
-#include "../primitive/polygon.cpp"
-#include "../primitive/segment.cpp"
-#include "../primitive/vector.cpp"
+#include "../primitive/polygon.h"
+#include "../primitive/segment.h"
+#include "../primitive/vector.h"
 
 struct std_vector {
   int size;
