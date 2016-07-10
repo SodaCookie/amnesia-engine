@@ -64,11 +64,11 @@ Vector operator-(const Vector &left, const Vector &right) {
     return Vector(left.x - right.x, left.y - right.y);
 }
 
-Vector operator*(const Vector &left, double &constant) {
+Vector operator*(const Vector &left, double constant) {
     return Vector(left.x * constant, left.y * constant);
 }
 
-Vector operator/(const Vector &left, double &constant) {
+Vector operator/(const Vector &left, double constant) {
     return Vector(left.x / constant, left.y / constant);
 }
 

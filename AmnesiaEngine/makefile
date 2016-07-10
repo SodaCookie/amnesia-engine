@@ -1,17 +1,19 @@
 CXX=g++
-CFLAGS=-c -Wall --std=c++11 -pg -g -stdlib=libc++
+CFLAGS=-c -Wall -pedantic --std=c++11 -pg -g -stdlib=libc++
 LFLAGS=-Wall --std=c++11 -pg -g -stdlib=libc++
-OBJECTS=$(patsubst %.o, $(BUILDFOLDER)/%.o, main.o vector.o segment.o polygon.o component.o entity.o lightsource.o system.o input.o window.o time.o engine.o)
+EXE=main
+MAIN_OBJ=$(patsubst %.o, $(BUILDFOLDER)/%.o, main.o)
+OBJECTS=$(patsubst %.o, $(BUILDFOLDER)/%.o, vector.o segment.o polygon.o component.o entity.o lightsource.o system.o input.o window.o time.o engine.o)
 SDLFLAGS=-lSDL2main -lSDL2
 STATICLIBNAME=libamnesia.a
 DEMOOBJECTS=demo.o
-BUILDFOLDER=build
+BUILDFOLDER=_build
 
-main: $(BUILDFOLDER) $(OBJECTS)
-	$(CXX) -o $(BUILDFOLDER)/main $(OBJECTS) $(SDLFLAGS) $(LFLAGS)
+main: $(BUILDFOLDER) $(OBJECTS) $(MAIN_OBJ)
+	$(CXX) -o $(BUILDFOLDER)/$(EXE) $(OBJECTS) $(MAIN_OBJ) $(SDLFLAGS) $(LFLAGS)
 
 $(BUILDFOLDER)/main.o: main.cpp
-	$(CXX) $(CFLAGS) $(SDLFLAGS) main.cpp -o $@
+	$(CXX) $(CFLAGS) main.cpp -o $@
 
 $(BUILDFOLDER)/segment.o: amnesia/primitive/segment.cpp amnesia/primitive/segment.h
 	$(CXX) $(CFLAGS) amnesia/primitive/segment.cpp -o $@
@@ -29,38 +31,33 @@ $(BUILDFOLDER)/entity.o: amnesia/classes/entity.cpp amnesia/classes/entity.h
 	$(CXX) $(CFLAGS) amnesia/classes/entity.cpp -o $@
 
 $(BUILDFOLDER)/lightsource.o: amnesia/classes/lightsource.cpp amnesia/classes/lightsource.h
-	$(CXX) $(CFLAGS) $(SDLFLAGS) amnesia/classes/lightsource.cpp -o $@
+	$(CXX) $(CFLAGS) amnesia/classes/lightsource.cpp -o $@
 
 $(BUILDFOLDER)/engine.o: amnesia/core/engine.cpp amnesia/core/engine.h
-	$(CXX) $(CFLAGS) $(SDLFLAGS) amnesia/core/engine.cpp -o $@
+	$(CXX) $(CFLAGS) amnesia/core/engine.cpp -o $@
 
 $(BUILDFOLDER)/system.o: amnesia/core/system.cpp amnesia/core/system.h
 	$(CXX) $(CFLAGS) amnesia/core/system.cpp -o $@
 
 $(BUILDFOLDER)/input.o: amnesia/core/input.cpp amnesia/core/input.h
-	$(CXX) $(CFLAGS) $(SDLFLAGS) amnesia/core/input.cpp -o $@
+	$(CXX) $(CFLAGS) amnesia/core/input.cpp -o $@
 
 $(BUILDFOLDER)/window.o: amnesia/core/window.cpp amnesia/core/window.h
-	$(CXX) $(CFLAGS) $(SDLFLAGS) amnesia/core/window.cpp -o $@
+	$(CXX) $(CFLAGS) amnesia/core/window.cpp -o $@
 
 $(BUILDFOLDER)/time.o: amnesia/core/time.cpp amnesia/core/time.h
-	$(CXX) $(CFLAGS) $(SDLFLAGS) amnesia/core/time.cpp -o $@
+	$(CXX) $(CFLAGS) amnesia/core/time.cpp -o $@
 
 $(BUILDFOLDER):
 	mkdir $(BUILDFOLDER)
 
 .PHONY: static
-static: $(BUILDFOLDER) $(OBJECTS)
+static: $(OBJECTS)
 	ar rcs ./$(BUILDFOLDER)/$(STATICLIBNAME) $^
 
 .PHONY: clean
 clean:
 	rm -rf $(BUILDFOLDER)
-
-.PHONY: clean
-cleanall:
-	rm -rf $(BUILDFOLDER)
-	rm main
 
 .PHONY: demo
 demo: $(OBJECTS) $(DEMOOBJECTS)

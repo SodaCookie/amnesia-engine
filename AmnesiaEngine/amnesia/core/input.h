@@ -2,6 +2,7 @@
 #define _AMNESIA_INPUTSYSTEM_HEADER_
 
 #include <utility>
+#include <string>
 #include "system.h"
 #include "SDL2/SDL.h"
 
