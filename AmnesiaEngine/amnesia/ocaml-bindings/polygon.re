@@ -1,4 +1,4 @@
-
+/*
 open Ctypes;
 
 open Foreign;
@@ -88,4 +88,4 @@ let segments_to_string bla => {
       List.fold_left (fun acc cur => acc ^ ", " ^ vertices_to_string (get_vertices cur)) "" rest ^
       "]"
   }
-}; */
+}; */ */

@@ -1,4 +1,4 @@
-
+/*
 open Ctypes;
 
 open Foreign;
@@ -47,4 +47,4 @@ let process lightsource::lightsource objects::objects view::view => {
   process_helper lightsource start len view (addr poly);
   let ret = CArray.from_ptr (elements (ptr Polygon.polygonT) poly) (vec_size poly);
   CArray.to_list ret
-}
+} */

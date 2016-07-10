@@ -1,4 +1,4 @@
-
+/*
 open Ctypes;
 
 open Foreign;
@@ -31,4 +31,4 @@ let intersect_line a b => Maybe.wrap (
   (foreign "segment_intersect_line" (ptr segmentT @-> ptr segmentT @-> returning (ptr Maybe.maybeT))) a b
 );
 
-let to_string s => "{\n  anchor: " ^ (Vector.to_string (get_anchor s)) ^ ",\n  direction: " ^ (Vector.to_string (get_direction s)) ^"\n}";
+let to_string s => "{\n  anchor: " ^ (Vector.to_string (get_anchor s)) ^ ",\n  direction: " ^ (Vector.to_string (get_direction s)) ^"\n}"; */

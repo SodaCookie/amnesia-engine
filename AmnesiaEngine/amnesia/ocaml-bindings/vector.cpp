@@ -1,50 +1,73 @@
 #include "../primitive/vector.h"
-#include <iostream>
-#include <caml/mlvalues.h>
-#include <caml/memory.h>
 #include <caml/alloc.h>
 #include <caml/custom.h>
-
-void addch(int x) {
-  std::cout << "heyo " << x << std::endl;
-}
-
-Vector *to_heap_ptr(Vector v) { return new Vector(v.x, v.y); }
+#include <caml/memory.h>
+#include <caml/mlvalues.h>
+#include <iostream>
 
 extern "C" {
-  CAMLprim value caml_curses_addch(value c) {
-    CAMLparam1 (c);
-    addch(Int_val(c));            /* Characters are encoded like integers */
-    CAMLreturn (Val_unit);
-  }
-Vector *create_vector(double x, double y) { return new Vector(x, y); }
-void destroy_vector(Vector *s) { delete s; }
-double vector_magnitude(Vector *v) { return v->magnitude(); }
+CAMLprim value vector_create_vector(value double_x, value double_y) {
+  CAMLparam2(double_x, double_y);
+  CAMLlocal1(record_v);
+  record_v = caml_alloc(2, Double_array_tag);
+  Store_double_field(record_v, 0, Double_val(double_x));
+  Store_double_field(record_v, 1, Double_val(double_y));
+  CAMLreturn(record_v);
+}
+CAMLprim value vector_magnitude(value record_v) {
+  CAMLparam1(record_v);
+  CAMLreturn(
+      caml_copy_double(Vector(Double_field(record_v, 0), Double_field(record_v, 1)).magnitude()));
+}
+CAMLprim value vector_angle(value record_v, value record_v2) {
+  CAMLparam2(record_v, record_v2);
+  CAMLreturn(
+      caml_copy_double(Vector(Double_field(record_v, 0), Double_field(record_v, 1))
+                           .angle(Vector(Double_field(record_v2, 0), Double_field(record_v2, 1)))));
+}
+CAMLprim value vector_set_magitude(value record_v, value double_magnitude) {
+  CAMLparam2(record_v, double_magnitude);
+  CAMLlocal1(record_r);
+  Vector v = Vector(Double_field(record_v, 0), Double_field(record_v, 1));
+  v.set_magnitude(Double_val(double_magnitude));
+  record_r = caml_alloc(2, Double_array_tag);
+  Store_double_field(record_r, 0, v.x);
+  Store_double_field(record_r, 1, v.y);
+  CAMLreturn(record_r);
+}
 
-double vector_angle(Vector *v1, Vector *v2) { return v1->angle(*v2); }
+CAMLprim value vector_dot(value record_v1, value record_v2) {
+  CAMLparam2(record_v1, record_v2);
+  Vector tmp1 = Vector(Double_field(record_v1, 0), Double_field(record_v1, 1));
+  Vector tmp2 = Vector(Double_field(record_v2, 0), Double_field(record_v2, 1));
+  CAMLreturn(caml_copy_double(tmp1.dot(tmp2)));
+}
 
-void vector_set_magitude(Vector *v, double magnitude) { v->set_magnitude(magnitude); }
+CAMLprim value vector_rotate(value record_v, value double_angle) {
+  CAMLparam2(record_v, double_angle);
+  CAMLlocal1(record_r);
+  Vector v =
+      Vector(Double_field(record_v, 0), Double_field(record_v, 1)).rotate(Double_val(double_angle));
+  record_r = caml_alloc(2, Double_array_tag);
+  Store_double_field(record_r, 0, v.x);
+  Store_double_field(record_r, 1, v.y);
+  CAMLreturn(record_r);
+}
 
-double vector_dot(Vector *v1, Vector *v2) { return v1->dot(*v2); }
+CAMLprim value vector_parallel(value record_v1, value record_v2) {
+  CAMLparam2(record_v1, record_v2);
+  CAMLreturn(
+      Val_bool(Vector(Double_field(record_v1, 0), Double_field(record_v1, 1))
+                   .parallel(Vector(Double_field(record_v2, 0), Double_field(record_v2, 1)))));
+}
 
-Vector *vector_rotate(Vector *v, double angle) { return to_heap_ptr(v->rotate(angle)); }
-
-bool vector_parallel(Vector *v1, Vector *v2) { return v1->parallel(*v2); }
-
-Vector *vector_normalized(Vector *v) { return to_heap_ptr(v->normalized()); }
-
-//============== Operators =============//
-Vector *vector_add(Vector *left, Vector *right) { return to_heap_ptr(*left + *right); }
-
-Vector *vector_subtract(Vector *left, Vector *right) { return to_heap_ptr(*left - *right); }
-
-Vector *vector_multiply(Vector *left, double constant) { return to_heap_ptr(*left * constant); }
-
-Vector *vector_divide(Vector *left, double constant) { return to_heap_ptr(*left / constant); }
-
-Vector *vector_opposite(Vector *v) { return to_heap_ptr(-*v); }
-
-double vector_get_x(Vector *v) { return v->x; }
-
-double vector_get_y(Vector *v) { return v->y; }
+CAMLprim value vector_normalized(value record_v) {
+  CAMLparam1(record_v);
+  CAMLlocal1(record_r);
+  Vector v = Vector(Double_field(record_v, 0), Double_field(record_v, 1)).normalized();
+  record_r = caml_alloc(2, Double_array_tag);
+  Store_double_field(record_r, 0, v.x);
+  Store_double_field(record_r, 1, v.y);
+  CAMLreturn(record_r);
+}
 }
