@@ -7,7 +7,7 @@ external magnitude : vectorT => float = "vector_magnitude";
 
 external angle : vectorT => vectorT => float = "vector_angle";
 
-external set_magitude : vectorT => float => vectorT = "vector_set_magitude";
+external set_magitude : vectorT => float => unit = "vector_set_magitude";
 
 external dot : vectorT => vectorT => float = "vector_dot";
 

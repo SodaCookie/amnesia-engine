@@ -1,48 +1,17 @@
 #include "../primitive/polygon.h"
 #include "../primitive/segment.h"
 #include "../primitive/vector.h"
-
-struct std_vector {
-  int size;
-  void **elements;
-};
+#include <caml/alloc.h>
+#include <caml/custom.h>
+#include <caml/memory.h>
+#include <caml/mlvalues.h>
 
 extern "C" {
-Polygon *polygon_create_polygon(Vector **vertices, size_t length) {
-  std::vector<Vector> list_of_vertices = std::vector<Vector>(length);
-  for (size_t i = 0; i < length; i++) {
-    list_of_vertices[i] = *(vertices[i]);
-  }
-  return new Polygon(list_of_vertices);
-}
-
-void polygon_get_vertices(Polygon *polygon, std_vector *out) {
-  std::vector<Vector> vertices = polygon->get_vertices();
-  int64_t size = vertices.size();
-
-  Vector **ret_arr = (Vector **)malloc(size * sizeof(Vector *));
-  memset(ret_arr, 0, size * sizeof(Vector *));
-  int i = 0;
-  for (Vector v : vertices) {
-    ret_arr[i] = new Vector(v.x, v.y);
-    i++;
-  }
-  out->size = size;
-  out->elements = (void **)ret_arr;
-}
-
-void polygon_get_sides(Polygon *polygon, std_vector *out) {
-  std::vector<Segment> sides = polygon->get_sides();
-  int64_t size = sides.size();
-
-  Segment **ret_arr = (Segment **)malloc(size * sizeof(Segment *));
-  memset(ret_arr, 0, size * sizeof(Segment *));
-  int i = 0;
-  for (Segment s : sides) {
-    ret_arr[i] = new Segment(s.anchor, s.direction);
-    i++;
-  }
-  out->size = size;
-  out->elements = (void **)ret_arr;
+CAMLprim value polygon_create_polygon(value vertices_list) {
+  CAMLparam1(vertices_list);
+  CAMLlocal1(record_polygon_ret);
+  record_polygon_ret = caml_alloc_small(1, 0);
+  Field(record_polygon_ret, 0) = vertices_list;
+  CAMLreturn(record_polygon_ret);
 }
 }
