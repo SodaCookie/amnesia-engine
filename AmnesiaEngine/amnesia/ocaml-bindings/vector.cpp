@@ -3,7 +3,6 @@
 #include <caml/custom.h>
 #include <caml/memory.h>
 #include <caml/mlvalues.h>
-#include <iostream>
 
 extern "C" {
 CAMLprim value vector_create_vector(value double_x, value double_y) {

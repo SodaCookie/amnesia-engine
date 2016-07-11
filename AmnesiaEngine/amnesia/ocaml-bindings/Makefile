@@ -31,16 +31,16 @@ vector.cmo: libvector.so vector.re
 		mv vector.cm* _build/
 
 libvector.so: vector.cpp ../primitive/vector.cpp
-		clang++ -c -stdlib=libc++ -std=c++11 -fPIC -pedantic -W -Wall -Wextra -I/usr/local/include $(INCLUDES) vector.cpp -o _build/libvector.so
+		clang++ -c -stdlib=libc++ -std=c++11 -fPIC -pedantic -W -Wall -Wextra $(INCLUDES) vector.cpp -o _build/libvector.so
 
 libsegment.so: segment.cpp ../primitive/segment.cpp
-		clang++ -c -stdlib=libc++ -std=c++11 -fPIC -pedantic -W -Wall -Wextra segment.cpp -o _build/libsegment.so
+		clang++ -c -stdlib=libc++ -std=c++11 -fPIC -pedantic -W -Wall -Wextra $(INCLUDES) segment.cpp -o _build/libsegment.so
 
 libmaybe.so: maybe.cpp
 		clang++ -c -stdlib=libc++ -std=c++11 -fPIC -pedantic -W -Wall -Wextra maybe.cpp -o _build/libmaybe.so
 
 libpolygon.so: polygon.cpp ../primitive/polygon.cpp ../primitive/vector.cpp
-		clang++ -c -stdlib=libc++ -std=c++11 -fPIC -pedantic -W -Wall -Wextra -I ./_build -I ../../_build polygon.cpp -o _build/libpolygon.so
+		clang++ -c -stdlib=libc++ -std=c++11 -fPIC -pedantic -W -Wall -Wextra $(INCLUDES) polygon.cpp -o _build/libpolygon.so
 
 liblightsource.so: lightsource.cpp ../primitive/vector.cpp ../primitive/segment.cpp ../primitive/polygon.cpp ../classes/lightsource.cpp ../classes/component.cpp
 		clang++ -c -stdlib=libc++ -std=c++11 -fPIC -pedantic -W -Wall -Wextra -I ./_build lightsource.cpp -o _build/liblightsource.so

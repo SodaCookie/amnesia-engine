@@ -11,7 +11,16 @@ let b2 = Vector.create_vector 0. 1.;
 
 let b3 = Vector.rotate b2 3.14159265358;
 
-print_endline @@ (Vector.to_string b3) ^ " - " ^ Vector.(to_string ((normalized a) + a));
+print_endline @@ (Vector.to_string b3 ^ " - " ^ Vector.(to_string (normalized a + a)));
+
+switch (
+  Segment.intersect_line
+    (Segment.create_segment (Vector.create_vector 0. 0.) (Vector.create_vector 1. 0.))
+    (Segment.create_segment (Vector.create_vector 0. 0.) (Vector.create_vector 0. 1.))
+) {
+| None => print_endline "sadness"
+| Some v => print_endline @@ Vector.to_string v
+};
 
 /* open Vector;
 

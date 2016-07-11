@@ -1,34 +1,13 @@
-/*
-open Ctypes;
 
-open Foreign;
+type segmentT = {anchor: Vector.vectorT, direction: Vector.vectorT};
 
-type segmentT;
+external create_segment : Vector.vectorT => Vector.vectorT => segmentT = "segment_create_segment";
 
-let segmentT: typ (structure segmentT) = structure "Segment";
+external intersect_segment : segmentT => segmentT => option Vector.vectorT = "segment_intersect_segment";
 
-let create_segment_helper =
-  foreign "create_segment" (ptr Vector.vectorT @-> ptr Vector.vectorT @-> returning (ptr segmentT));
+external intersect_ray : segmentT => segmentT => option Vector.vectorT = "segment_intersect_ray";
 
-let create_segment anchor::anchor direction::direction => create_segment_helper anchor direction;
+external intersect_line : segmentT => segmentT => option Vector.vectorT = "segment_intersect_line";
 
-let destroy_segment = foreign "destroy_segment" (ptr segmentT @-> returning void);
-
-let get_anchor = foreign "segment_get_anchor" (ptr segmentT @-> returning (ptr Vector.vectorT));
-
-let get_direction = foreign "segment_get_direction" (ptr segmentT @-> returning (ptr Vector.vectorT));
-
-let intersect_segment a b => Maybe.wrap (
-  (foreign "segment_intersect_segment" (ptr segmentT @-> ptr segmentT @-> returning (ptr Maybe.maybeT)))
-    a b
-);
-
-let intersect_ray a b => Maybe.wrap (
-  (foreign "segment_intersect_ray" (ptr segmentT @-> ptr segmentT @-> returning (ptr Maybe.maybeT))) a b
-);
-
-let intersect_line a b => Maybe.wrap (
-  (foreign "segment_intersect_line" (ptr segmentT @-> ptr segmentT @-> returning (ptr Maybe.maybeT))) a b
-);
-
-let to_string s => "{\n  anchor: " ^ (Vector.to_string (get_anchor s)) ^ ",\n  direction: " ^ (Vector.to_string (get_direction s)) ^"\n}"; */
+let to_string p =>
+  "{anchor: " ^ Vector.to_string p.anchor ^ ", direction: " ^ Vector.to_string p.direction ^ "}";
