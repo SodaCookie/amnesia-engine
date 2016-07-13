@@ -41,13 +41,12 @@ Vector Vector::rotate(double angle) const {
 
 bool Vector::parallel(const Vector &other) const {
     double epsilon = 0.00001;
-    double angle = this->angle(other);
-
-    if (std::abs(angle) < epsilon ||
-            std::abs(3.14159265358 - angle) < epsilon) {
-        return true;
+    if (x == 0 || other.x == 0) {
+        // Vertical vectors edge case
+        return x == other.x; // only if both of them are equal
     }
-    return false;
+    double slope_delta = y / x - other.y / other.x;
+    return slope_delta < epsilon;
 }
 
 Vector Vector::normalized() const {

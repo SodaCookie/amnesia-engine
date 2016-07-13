@@ -1,15 +1,26 @@
 #include "polygon.h"
+#include <limits>
+#include <algorithm>
 
 Polygon::Polygon() {
 }
 
 Polygon::Polygon(std::vector<Vector> vertices) : vertices(vertices){
+    double min_x = std::numeric_limits<double>::min();
+    double min_y = std::numeric_limits<double>::min();
+    double max_x = std::numeric_limits<double>::max();
+    double max_y = std::numeric_limits<double>::max();
     for (unsigned int i = 0, j = 1; i < vertices.size(); i++, j++) {
         auto first = vertices[i];
         auto second = vertices[j % vertices.size()];
-
+        // Maintain calculate bounds
+        min_x = std::min(min_x, first.x);
+        max_x = std::max(max_x, first.x);
+        min_y = std::min(min_y, first.y);
+        max_y = std::max(max_y, first.y);
         sides.push_back(Segment(first, second - first));
     }
+    bounding_rect = Rect(min_x, min_y, max_x - min_x, max_y - min_y);
 }
 
 std::vector<Vector> Polygon::get_vertices() {

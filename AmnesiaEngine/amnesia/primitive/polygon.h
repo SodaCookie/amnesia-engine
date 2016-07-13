@@ -4,13 +4,14 @@
 #include <ostream>
 #include <vector>
 #include <utility>
-#include <algorithm>
 #include "vector.h"
 #include "segment.h"
+#include "rect.h"
 
 class Polygon {
 
 public:
+    Rect bounding_rect;
 
     Polygon();
     Polygon(std::vector<Vector> vertices);

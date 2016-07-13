@@ -3,7 +3,9 @@ CFLAGS=-c -Wall -pedantic --std=c++11 -pg -g -stdlib=libc++
 LFLAGS=-Wall --std=c++11 -pg -g -stdlib=libc++
 EXE=main
 MAIN_OBJ=$(patsubst %.o, $(BUILDFOLDER)/%.o, main.o)
-OBJECTS=$(patsubst %.o, $(BUILDFOLDER)/%.o, vector.o segment.o polygon.o component.o entity.o lightsource.o system.o input.o window.o time.o engine.o)
+OBJECTS=$(patsubst %.o, $(BUILDFOLDER)/%.o, vector.o segment.o polygon.o \
+	component.o entity.o lightsource.o system.o input.o window.o time.o \
+	engine.o rect.o)
 SDLFLAGS=-lSDL2main -lSDL2
 STATICLIBNAME=libamnesia.a
 DEMOOBJECTS=demo.o
@@ -47,6 +49,9 @@ $(BUILDFOLDER)/window.o: amnesia/core/window.cpp amnesia/core/window.h
 
 $(BUILDFOLDER)/time.o: amnesia/core/time.cpp amnesia/core/time.h
 	$(CXX) $(CFLAGS) amnesia/core/time.cpp -o $@
+
+$(BUILDFOLDER)/rect.o: amnesia/primitive/rect.cpp amnesia/primitive/rect.h
+	$(CXX) $(CFLAGS) amnesia/primitive/rect.cpp -o $@
 
 $(BUILDFOLDER):
 	mkdir $(BUILDFOLDER)
