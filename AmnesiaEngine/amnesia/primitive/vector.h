@@ -14,6 +14,9 @@ public:
     const static Vector left;
 
     Vector();
+    Vector(Vector &&other);
+    Vector(const Vector &other) = default;
+    Vector& operator=(const Vector &other) = default;
     Vector(double x, double y);
     ~Vector() = default;
 

@@ -4,6 +4,13 @@
 Vector::Vector() : x(0.0), y(0.0) {
 }
 
+Vector::Vector(Vector &&other) {
+    x = other.x;
+    y = other.y;
+    other.x = 0;
+    other.y = 0;
+}
+
 Vector::Vector(double x, double y) : x(x), y(y) {
 }
 

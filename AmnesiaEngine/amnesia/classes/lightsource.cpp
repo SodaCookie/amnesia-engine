@@ -9,7 +9,7 @@ LightSource::LightSource() : Component() {
 }
 
 LightSource::LightSource(Vector position, double radius, double strength) :
-    Component(), position(position), radius(radius), strength(strength) {
+        Component(), position(position), radius(radius), strength(strength) {
 }
 
 void LightSource::move(Vector new_position) {
