@@ -43,6 +43,10 @@ void Polygon::move(const Vector &point) {
         edge.anchor.x += point.x;
         edge.anchor.y += point.y;
     }
+
+    // Move bounding box
+    bounding_rect.x += point.x;
+    bounding_rect.y += point.y;
 }
 
 int Polygon::collidepoint(Vector point) {

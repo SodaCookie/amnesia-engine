@@ -15,6 +15,7 @@ public:
 
     Polygon();
     Polygon(std::vector<Vector> vertices);
+
     ~Polygon() = default;
 
     std::vector<Vector> get_vertices();

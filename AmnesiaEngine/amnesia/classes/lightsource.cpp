@@ -4,12 +4,26 @@
 #include <utility>
 #include <algorithm>
 #include <limits>
+#define _USE_MATH_DEFINES
+#include <cmath>
+#include <iostream>
+
+int LightSource::Precision = 360;
 
 LightSource::LightSource() : Component() {
 }
 
 LightSource::LightSource(Vector position, double radius, double strength) :
         Component(), position(position), radius(radius), strength(strength) {
+    // Generate rays (360 is the number of rays to test)
+    radial_vectors.reserve(LightSource::Precision);
+    for (double i = 0; i < LightSource::Precision; i++){
+        radial_vectors.push_back(Segment(Vector(0, 0),
+            Vector(
+                radius * cos(i / LightSource::Precision * 360 * M_PI / 180),
+                radius * sin(i / LightSource::Precision * 360 * M_PI / 180)
+            )));
+    }
 }
 
 void LightSource::move(Vector new_position) {
@@ -18,76 +32,68 @@ void LightSource::move(Vector new_position) {
 
 std::vector<Polygon> LightSource::process(
         std::vector<Polygon> polygons, Polygon view) {
+    // Gather all polygons
     std::vector<Segment> segments = std::vector<Segment>();
-    std::vector<Vector> points = std::vector<Vector>();
 
     // Add current points and segments
     for (auto polygon : polygons) {
-        for (auto point : polygon.get_vertices()) {
-            points.push_back(point);
-        }
         for (auto segment : polygon.get_sides()) {
             segments.push_back(segment);
         }
     }
 
     // add view to model
-    for (auto point : view.get_vertices()) {
-        points.push_back(point);
-    }
     for (auto segment : view.get_sides()) {
         segments.push_back(segment);
     }
 
     // Create rays to test
     Vector rel_position = position;// + owner->transform;
-    std::vector<Segment> rays = std::vector<Segment>();
-    for (auto point : points) {
-        Vector direction = point - rel_position;
-        Segment ray = Segment(rel_position, direction);
-        if (ray.direction.magnitude() == 0) {
-            continue;
-        }
-        rays.push_back(ray);
-    }
 
-    // Test all intersections
-    std::vector<Vector> intersections = std::vector<Vector>();
-    for (auto ray : rays) {
-        std::pair<bool, Vector> closest_intersection (false, Vector());
-        double closest_magnitude = std::numeric_limits<double>::max();
+    // Returned list of blocks
+    std::vector<Polygon> blocks = std::vector<Polygon>();
+
+    // For block building
+    bool seen_previous;
+    Vector previous_intersection;
+    Vector first_intersection;
+
+    // For intersect detection
+    Segment current_ray; // Per ray the current closest
+
+    for (auto current_ray : radial_vectors) {
+        current_ray.anchor = rel_position;
         for (auto segment : segments) {
-            std::pair<bool, Vector> intersect = segment.intersect_ray(ray);
+            std::pair<bool, Vector> intersect =
+                current_ray.intersect_segment(segment);
             if (intersect.first) {
-                Vector distance = intersect.second - rel_position;
-                if (!closest_intersection.first or
-                        distance.magnitude() <= closest_magnitude){
-                    closest_intersection = std::make_pair(true, distance);
-                    closest_magnitude = distance.magnitude();
-                }
+                current_ray.direction = intersect.second - current_ray.anchor;
             }
         }
-        if (closest_intersection.first) {
-            intersections.push_back(closest_intersection.second);
+
+        // Build the next block
+        if (seen_previous) {
+            blocks.push_back(Polygon(
+                std::vector<Vector>({
+                    rel_position,
+                    previous_intersection,
+                    current_ray.direction + current_ray.anchor
+                })
+            ));
+            previous_intersection = current_ray.direction + current_ray.anchor;
+        }
+        else {
+            first_intersection = current_ray.direction + current_ray.anchor;
+            previous_intersection = current_ray.direction + current_ray.anchor;
+            seen_previous = true;
         }
     }
-
-    // Sort intersects by angle
-    std::sort(intersections.begin(), intersections.end(),
-        [] (const Vector &i, const Vector &j) -> bool {
-            return i.angle(Vector::right) < j.angle(Vector::right);
-        });
-
-    // Calculate light blocks
-    std::vector<Polygon> blocks = std::vector<Polygon>();
-    for (unsigned int i = 0; i < intersections.size(); i++) {
-        std::vector<Vector> triangle_points = std::vector<Vector>();
-        triangle_points.push_back(rel_position);
-        triangle_points.push_back(intersections[i] + rel_position);
-        triangle_points.push_back(
-            intersections[(i+1) % intersections.size()] + rel_position);
-        blocks.push_back(Polygon(triangle_points));
-    }
-
+    blocks.push_back(Polygon(
+        std::vector<Vector>({
+            rel_position,
+            previous_intersection,
+            first_intersection
+        })
+    ));
     return blocks;
 }

@@ -40,6 +40,10 @@ double Vector::dot(const Vector &other) const {
     return x * other.x + y * other.y;
 }
 
+double Vector::cross(const Vector &other) const {
+    return x * other.y - y * other.x;
+}
+
 Vector Vector::rotate(double angle) const {
     double new_x = cos(angle) * x - sin(angle) * y;
     double new_y = sin(angle) * x + cos(angle) * y;
@@ -72,6 +76,10 @@ Vector operator-(const Vector &left, const Vector &right) {
 
 Vector operator*(const Vector &left, double constant) {
     return Vector(left.x * constant, left.y * constant);
+}
+
+Vector operator*(double constant, const Vector &right) {
+    return Vector(right.x * constant, right.y * constant);
 }
 
 Vector operator/(const Vector &left, double constant) {

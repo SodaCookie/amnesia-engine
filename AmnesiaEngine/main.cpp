@@ -2,6 +2,7 @@
 #include <memory>
 #include "amnesia/core/engine.h"
 #include "amnesia/primitive/vector.h"
+#include "amnesia/primitive/segment.h"
 
 #include <tuple>
 #include <ctime>
@@ -59,13 +60,18 @@ int main(int argc, char *argv[]) {
     // std::shared_ptr<GameEngine> e = std::shared_ptr<GameEngine>(new GameEngine());
     // e->run();
     int64 before;
-    Vector ref = Vector::up + Vector::left;
+    int num = 10000;
+    Segment s = Segment(Vector(1, -1), Vector::up * 2);
 
     before = GetTimeMs64();
-    for (int i = 0; i < 1000000; i++){
+    // Timed code
+    for (double i = 0; i < num; i += 1){
         // Radially check parallel
-        ref.parallel(Vector(3 * cos(2 * 3.14 * i / 1000), 3 * sin(2 * 3.14 * i / 1000)));
+        auto v = s.intersect_segment(Segment(Vector(0, 0), Vector(3 * cos(0.0174533 * i / num * 360), 3 * sin(0.0174533 * i / num * 360))));
+        std::cout << Segment(Vector(0, 0), Vector(3 * cos(0.0174533 * i / 8 * 360), 3 * sin(0.0174533 * i / 8 * 360))) << std::endl;
+        std::cout << v.first << " " << v.second << std::endl;
     }
+
     std::cout << GetTimeMs64() - before << std::endl;
 
     return 0;

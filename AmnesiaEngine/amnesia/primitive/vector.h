@@ -26,6 +26,8 @@ public:
 
     double dot(const Vector &other) const;
 
+    double cross(const Vector &other) const;
+
     Vector rotate(double angle) const;
 
     bool parallel(const Vector &other) const;
@@ -38,6 +40,7 @@ public:
     friend Vector operator+(const Vector &left, const Vector &right);
     friend Vector operator-(const Vector &left, const Vector &right);
     friend Vector operator*(const Vector &left, double constant);
+    friend Vector operator*(double constant, const Vector &right);
     friend Vector operator/(const Vector &left, double constant);
     friend std::ostream &operator<<(std::ostream &os, const Vector &m);
     friend Vector operator-(const Vector &vector);

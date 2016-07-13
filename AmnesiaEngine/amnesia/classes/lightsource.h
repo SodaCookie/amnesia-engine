@@ -10,6 +10,8 @@ class LightSource : public Component {
 
 public:
 
+    static int Precision;
+
     LightSource();
     LightSource(Vector position, double radius, double strength = 1.0);
     ~LightSource() = default;
@@ -23,6 +25,7 @@ private:
     Vector position;
     double radius;
     double strength;
+    std::vector<Segment> radial_vectors;
 
 };
 
