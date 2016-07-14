@@ -7,6 +7,8 @@
 #include <caml/memory.h>
 #include <caml/mlvalues.h>
 #include <vector>
+#include <cstdio>
+#include <chrono>
 
 #define Vector_val(v) Vector(Double_field(v, 0), Double_field(v, 1))
 
@@ -42,6 +44,12 @@ CAMLprim value lightsource_create_lightsource(value vector_position, value doubl
   CAMLreturn(record_lightsource);
 }
 
+CAMLprim value lightsource_move_lightsource(value lightsource, value vector_position) {
+  CAMLparam2(lightsource, vector_position);
+  Field(lightsource, 0) = vector_position;
+  CAMLreturn(Val_unit);
+}
+
 CAMLprim value lightsource_process(value record_lightsource, value list_polygon_objects,
                                    value polygon_view) {
   CAMLparam3(record_lightsource, list_polygon_objects, polygon_view);
@@ -54,7 +62,12 @@ CAMLprim value lightsource_process(value record_lightsource, value list_polygon_
   polygon_list_to_std_vector(list_polygon_objects, &tmp_polygon_list);
   std::vector<Vector> tmp_vector_list = std::vector<Vector>();
   vector_list_to_std_vector(Field(polygon_view, 0), &tmp_vector_list);
-  std::vector<Polygon> list_polygon = l.process(tmp_polygon_list, Polygon(tmp_vector_list));
+  Polygon polygon = Polygon(tmp_vector_list);
+  auto start = std::chrono::steady_clock::now();
+  std::vector<Polygon> list_polygon = l.process(tmp_polygon_list, polygon);
+  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>
+                            (std::chrono::steady_clock::now() - start);
+  printf("--> %lld\n", duration.count());
   polygon_prev_head = Val_unit;
   for (Polygon p : list_polygon) {
     vector_prev_head = Val_unit;

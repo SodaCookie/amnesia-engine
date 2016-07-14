@@ -35,13 +35,13 @@ let windowSize = 1000;
 
 let windowSizef = float_of_int windowSize;
 
-type intPointType = {x: int, y: int};
+type floatPointType = {x: float, y: float};
 
 type wCoordType = | WCoord of Vector.vectorT;
 
-type gCoordType = | GCoord of intPointType;
+type gCoordType = | GCoord of floatPointType;
 
-type gameStateT = {mutable lightPos: gCoordType};
+type gameStateT = {light: Lightsource.lightsourceT};
 
 let toWorldCoord (WCoord {Vector.x, Vector.y}) => (
   x /. (windowSizef /. 2.) -. 1.,
@@ -72,8 +72,8 @@ let drawCircle radius::radius color::color position::(GCoord {x, y}) => {
     GlDraw.vertex2 @@
       toWorldCoord (
         WCoord Vector.{
-          x: cos degInGrad *. floatRadius +. float_of_int x,
-          y: sin degInGrad *. floatRadius +. float_of_int y
+          x: cos degInGrad *. floatRadius +. x,
+          y: sin degInGrad *. floatRadius +. y
         }
       )
   };
@@ -81,8 +81,7 @@ let drawCircle radius::radius color::color position::(GCoord {x, y}) => {
 };
 
 let mouseDidMove gameState::gameState x::x y::y => {
-  let lightPos = GCoord {x, y: windowSize - y};
-  gameState.lightPos = lightPos
+  Lightsource.move_lightsource gameState.light (Vector.create_vector (float_of_int x) (float_of_int (windowSize - y)));
 };
 
 let numOfPoints = ref 0;
@@ -93,7 +92,7 @@ let createLightsourceTime = ref 0.;
 
 /* let processTime = ref 0.; */
 let render gameState::gameState () => {
-  let curTime = Unix.gettimeofday ();
+  /* let curTime = Unix.gettimeofday ();
   numOfPoints := !numOfPoints + 1;
   if (curTime -. !prevTime >= 1.) {
     print_endline @@ ("framerate -> " ^ string_of_int !numOfPoints);
@@ -106,29 +105,30 @@ let render gameState::gameState () => {
     /* processTime := 0.; */
     createLightsourceTime := 0.;
     prevTime := curTime
-  };
+  }; */
   GlClear.clear [`color];
   GlMat.load_identity ();
-  let GCoord {x, y} = gameState.lightPos;
-  let prevTime = Unix.gettimeofday ();
-  let light =
-    Lightsource.create_lightsource (Vector.create_vector (float_of_int x) (float_of_int y)) 200. 1.;
-  createLightsourceTime := !createLightsourceTime +. (Unix.gettimeofday () -. prevTime);
+  /* let prevTime = Unix.gettimeofday (); */
+  /* createLightsourceTime := !createLightsourceTime +. (Unix.gettimeofday () -. prevTime); */
 
 /* let light2 =
    Lightsource.create_lightsource
      (Vector.create_vector (float_of_int (x + 300)) (float_of_int y)) 200. 1.; */  /* let prevTime = Unix.gettimeofday (); */
-  let polygonList = Lightsource.process lightsource::light objects::!arrayOfPolygons view::view;
+  let polygonList = Lightsource.process lightsource::gameState.light objects::!arrayOfPolygons view::view;
   /* processTime := !processTime +. (Unix.gettimeofday () -. prevTime); */
   /* let polygonList2 = Lightsource.process lightsource::light2 objects::!arrayOfPolygons view::view; */
   ignore @@ List.map (fun p => drawPolygon filled::true polygon::p color::(1., 1., 1.)) polygonList;
   /* ignore @@
     List.map (fun p => drawPolygon filled::true polygon::p color::(1., 1., 1.)) polygonList2; */
-  ignore @@
-    List.map (fun p => drawPolygon filled::false polygon::p color::(0., 1., 0.)) polygonList;
+  /* ignore @@
+    List.map (fun p => drawPolygon filled::false polygon::p color::(0., 1., 0.)) polygonList; */
   /* ignore @@
     List.map (fun p => drawPolygon filled::false polygon::p color::(0., 1., 0.)) polygonList2; */
-  drawCircle radius::4 color::(1., 0., 0.) position::(GCoord {x, y});
+  {
+    let open Vector;
+    let open Lightsource;
+    drawCircle radius::4 color::(1., 0., 0.) position::(GCoord {x: gameState.light.position.x, y: gameState.light.position.y});
+  };
   /* drawCircle radius::4 color::(1., 0., 0.) position::(GCoord {x: x + 300, y}); */
   Glut.swapBuffers ()
 };
@@ -141,7 +141,7 @@ Glut.initDisplayMode double_buffer::true ();
 
 Glut.createWindow title::"Lights and Shadows";
 
-let gameState = {lightPos: GCoord {x: 100, y: 50}};
+let gameState = {light: Lightsource.create_lightsource (Vector.create_vector 100. 50.) 200. 1.};
 
 /* Glut.passiveMotionFunc (mouseDidMove gameState::gameState); */
 GlMat.mode `modelview;
@@ -175,7 +175,7 @@ Glut.idleFunc
               y := !y + 5
             }
           };
-          gameState.lightPos = GCoord {x: !x, y: windowSize - !y}
+          Lightsource.move_lightsource gameState.light (Vector.create_vector (float_of_int !x) (float_of_int (windowSize - !y)))
         };
         Glut.postRedisplay ()
       }
