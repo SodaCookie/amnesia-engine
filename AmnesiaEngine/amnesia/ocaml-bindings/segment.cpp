@@ -34,11 +34,11 @@ CAMLprim value segment_intersect_segment(value segment1, value segment2) {
   CAMLlocal1(record_vector);
   Segment s = Segment_val(segment1);
   Segment s2 = Segment_val(segment2);
-  std::pair<bool, Vector> ret = s.intersect_segment(s2);
-  if (ret.first) {
+  Vector out;
+  if (s.intersect_segment(s2, out)) {
     record_vector = caml_alloc_small(2, Double_array_tag);
-    Double_field(record_vector, 0) = ret.second.x;
-    Double_field(record_vector, 1) = ret.second.y;
+    Double_field(record_vector, 0) = out.x;
+    Double_field(record_vector, 1) = out.y;
     CAMLreturn(Val_some(record_vector));
   } else {
     CAMLreturn(Val_none);
@@ -49,11 +49,11 @@ CAMLprim value segment_intersect_ray(value segment1, value segment2) {
   CAMLlocal1(record_vector);
   Segment s = Segment_val(segment1);
   Segment s2 = Segment_val(segment2);
-  std::pair<bool, Vector> ret = s.intersect_ray(s2);
-  if (ret.first) {
+  Vector out;
+  if (s.intersect_ray(s2, out)) {
     record_vector = caml_alloc_small(2, Double_array_tag);
-    Double_field(record_vector, 0) = ret.second.x;
-    Double_field(record_vector, 1) = ret.second.y;
+    Double_field(record_vector, 0) = out.x;
+    Double_field(record_vector, 1) = out.y;
     CAMLreturn(Val_some(record_vector));
   } else {
     CAMLreturn(Val_none);
@@ -64,11 +64,11 @@ CAMLprim value segment_intersect_line(value segment1, value segment2) {
   CAMLlocal1(record_vector);
   Segment s = Segment_val(segment1);
   Segment s2 = Segment_val(segment2);
-  std::pair<bool, Vector> ret = s.intersect_line(s2);
-  if (ret.first) {
+  Vector out;
+  if (s.intersect_line(s2, out)) {
     record_vector = caml_alloc_small(2, Double_array_tag);
-    Double_field(record_vector, 0) = ret.second.x;
-    Double_field(record_vector, 1) = ret.second.y;
+    Double_field(record_vector, 0) = out.x;
+    Double_field(record_vector, 1) = out.y;
     CAMLreturn(Val_some(record_vector));
   } else {
     CAMLreturn(Val_none);

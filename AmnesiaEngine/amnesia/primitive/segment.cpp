@@ -3,8 +3,7 @@
 
 Segment::Segment() {}
 
-Segment::Segment(Vector anchor, Vector direction)
-    : anchor(anchor), direction(direction) {}
+Segment::Segment(Vector anchor, Vector direction) : anchor(anchor), direction(direction) {}
 
 std::pair<bool, Vector> Segment::intersect_segment(const Segment &other) const {
   double rs = direction.cross(other.direction);
@@ -25,9 +24,13 @@ bool Segment::intersect_segment(const Segment &other, Vector &out) const {
   if (std::abs(rs) > 0.000001) {
     double t = (other.anchor - anchor).cross(other.direction) / rs;
     double u = (other.anchor - anchor).cross(direction) / rs;
+    bool ret = (t >= 0 && t <= 1) && (u >= 0 && u <= 1);
+    if (!ret) {
+      return false;
+    }
     out.x = anchor.x + t * direction.x;
     out.y = anchor.y + t * direction.y;
-    return (t >= 0 && t <= 1) && (u >= 0 && u <= 1);
+    return true;
   } else {
     return false;
   }
@@ -52,9 +55,13 @@ bool Segment::intersect_ray(const Segment &other, Vector &out) const {
   if (std::abs(rs) > 0.000001) {
     double t = (other.anchor - anchor).cross(other.direction) / rs;
     double u = (other.anchor - anchor).cross(direction) / rs;
+    bool ret = (t >= 0 && t <= 1) && (u >= 0);
+    if (!ret) {
+      return false;
+    }
     out.x = anchor.x + t * direction.x;
     out.y = anchor.y + t * direction.y;
-    return (t >= 0 && t <= 1) && (u >= 0);
+    return true;
   } else {
     return false;
   }
@@ -65,10 +72,26 @@ std::pair<bool, Vector> Segment::intersect_line(const Segment &other) const {
 
   if (std::abs(rs) > 0.000001) {
     double t = (other.anchor - anchor).cross(other.direction) / rs;
-    return std::pair<bool, Vector>((t >= 0 && t <= 1),
-                                   Vector(anchor + (t * direction)));
+    return std::pair<bool, Vector>((t >= 0 && t <= 1), Vector(anchor + (t * direction)));
   } else {
     return std::pair<bool, Vector>(false, Vector());
+  }
+}
+
+bool Segment::intersect_line(const Segment &other, Vector &out) const {
+  double rs = direction.cross(other.direction);
+
+  if (std::abs(rs) > 0.000001) {
+    double t = (other.anchor - anchor).cross(other.direction) / rs;
+    bool ret = (t >= 0 && t <= 1);
+    if (!ret) {
+      return false;
+    }
+    out.x = anchor.x + t * direction.x;
+    out.y = anchor.y + t * direction.y;
+    return true;
+  } else {
+    return false;
   }
 }
 
