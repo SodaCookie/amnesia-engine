@@ -8,13 +8,15 @@
 class Rect {
 
 public:
-    double x, y, w, h;
+  double x, y, w, h;
 
-    Rect();
-    Rect(double x, double y, double w, double h);
-    Rect(const SDL_Rect &other);
+  Rect();
+  Rect(double x, double y, double w, double h);
+  Rect(const SDL_Rect &other);
 
-    SDL_Rect sdl_rect() const;
+  bool intersect_rect(const Rect &other);
+
+  SDL_Rect sdl_rect() const;
 };
 
 #endif
