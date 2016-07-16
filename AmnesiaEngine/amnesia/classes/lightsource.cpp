@@ -18,8 +18,7 @@ LightSource::LightSource(Vector position, double radius, double strength)
 
 void LightSource::move(Vector new_position) { position = new_position; }
 
-std::vector<Polygon>
-LightSource::process(const std::vector<Polygon> &polygons) {
+std::vector<Polygon> LightSource::process(std::vector<Polygon> &polygons) {
   std::vector<Segment> segments = std::vector<Segment>();
   std::vector<Vector> points = std::vector<Vector>();
   Vector rel_position = position; // + owner->transform;
@@ -31,10 +30,11 @@ LightSource::process(const std::vector<Polygon> &polygons) {
   // Rect
   Rect camera_bound = Rect(rel_position.x - radius, rel_position.y - radius,
                            radius * 2, radius * 2);
-
   // Add current points and segments
-  for (const auto &polygon : polygons) {
-    if (camera_bound.intersect_rect(polygon.bounding_rect)) {
+
+  for (auto &polygon : polygons) {
+    // if (camera_bound.intersect_rect(polygon.bounding_rect)) {
+    if (true) {
       for (const auto &point : polygon.get_vertices()) {
         min_x = std::min(min_x, point.x);
         max_x = std::max(max_x, point.x);
@@ -42,7 +42,7 @@ LightSource::process(const std::vector<Polygon> &polygons) {
         max_y = std::max(max_y, point.y);
         points.push_back(point);
       }
-      for (const auto &segment : polygon.get_sides()) {
+      for (auto &segment : polygon.get_sides()) {
         segments.push_back(segment);
       }
     }
@@ -56,7 +56,7 @@ LightSource::process(const std::vector<Polygon> &polygons) {
   for (const auto &point : view.get_vertices()) {
     points.push_back(point);
   }
-  for (const auto &segment : view.get_sides()) {
+  for (auto &segment : view.get_sides()) {
     segments.push_back(segment);
   }
 
@@ -78,6 +78,7 @@ LightSource::process(const std::vector<Polygon> &polygons) {
   // Test all intersections
   std::vector<Vector> intersections = std::vector<Vector>();
   Vector intersect;
+
   for (const auto &ray : rays) {
     std::pair<bool, Vector> closest_intersection(false, Vector());
     double closest_magnitude = std::numeric_limits<double>::max();

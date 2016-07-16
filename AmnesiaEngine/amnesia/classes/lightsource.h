@@ -17,7 +17,7 @@ public:
 
   void move(Vector new_position);
 
-  std::vector<Polygon> process(const std::vector<Polygon> &polygons);
+  std::vector<Polygon> process(std::vector<Polygon> &polygons);
 
 private:
   Vector position;

@@ -1,5 +1,6 @@
 CXX=g++
-CFLAGS=-c -Wall -pedantic --std=c++11 -pg -g -stdlib=libc++
+# CFLAGS=-c -Wall -pedantic --std=c++11 -pg -g -stdlib=libc++
+CFLAGS=-c -Wall -pedantic --std=c++11 -O3 -stdlib=libc++
 LFLAGS=-Wall --std=c++11 -pg -g -stdlib=libc++
 EXE=main
 MAIN_OBJ=$(patsubst %.o, $(BUILDFOLDER)/%.o, main.o)

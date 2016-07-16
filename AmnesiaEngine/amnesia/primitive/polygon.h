@@ -24,15 +24,12 @@ public:
     double max_y = std::numeric_limits<double>::min();
 
     // Add current points and segments
-    for (unsigned int i = 0, j = 1; i < vertices.size(); i++, j++) {
-      auto first = vertices[i];
-      auto second = vertices[j % vertices.size()];
+    for (Vector &point : vertices) {
       // Maintain calculate bounds
-      min_x = std::min(min_x, first.x);
-      max_x = std::max(max_x, first.x);
-      min_y = std::min(min_y, first.y);
-      max_y = std::max(max_y, first.y);
-      sides.push_back(Segment(first, second - first));
+      min_x = std::min(min_x, point.x);
+      max_x = std::max(max_x, point.x);
+      min_y = std::min(min_y, point.y);
+      max_y = std::max(max_y, point.y);
     }
 
     bounding_rect = Rect(min_x, min_y, max_x - min_x, max_y - min_y);
@@ -42,7 +39,7 @@ public:
 
   std::vector<Vector> get_vertices() const;
 
-  std::vector<Segment> get_sides() const;
+  std::vector<Segment> get_sides();
 
   void move(const Vector &point);
 

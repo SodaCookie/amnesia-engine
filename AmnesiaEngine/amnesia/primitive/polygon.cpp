@@ -9,22 +9,29 @@ Polygon::Polygon(std::vector<Vector> vertices) : vertices(vertices) {
   double min_y = std::numeric_limits<double>::max();
   double max_x = std::numeric_limits<double>::min();
   double max_y = std::numeric_limits<double>::min();
-  for (unsigned int i = 0, j = 1; i < vertices.size(); i++, j++) {
-    auto first = vertices[i];
-    auto second = vertices[j % vertices.size()];
+  // Add current points and segments
+  for (Vector &point : vertices) {
     // Maintain calculate bounds
-    min_x = std::min(min_x, first.x);
-    max_x = std::max(max_x, first.x);
-    min_y = std::min(min_y, first.y);
-    max_y = std::max(max_y, first.y);
-    sides.push_back(Segment(first, second - first));
+    min_x = std::min(min_x, point.x);
+    max_x = std::max(max_x, point.x);
+    min_y = std::min(min_y, point.y);
+    max_y = std::max(max_y, point.y);
   }
   bounding_rect = Rect(min_x, min_y, max_x - min_x, max_y - min_y);
 }
 
 std::vector<Vector> Polygon::get_vertices() const { return vertices; }
 
-std::vector<Segment> Polygon::get_sides() const { return sides; }
+std::vector<Segment> Polygon::get_sides() {
+  if (sides.empty()) {
+    for (unsigned int i = 0, j = 1; i < vertices.size(); i++, j++) {
+      auto first = vertices[i];
+      auto second = vertices[j % vertices.size()];
+      sides.push_back(Segment(first, second - first));
+    }
+  }
+  return sides;
+}
 
 void Polygon::move(const Vector &point) {
   // Move vertices
