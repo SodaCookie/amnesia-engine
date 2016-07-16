@@ -25,6 +25,8 @@ public:
 
   std::pair<bool, Vector> intersect_line(const Segment &other) const;
 
+  bool intersect_line(const Segment &other, Vector &out) const;
+
   // Operators
   friend std::ostream &operator<<(std::ostream &os, const Segment &m);
 };

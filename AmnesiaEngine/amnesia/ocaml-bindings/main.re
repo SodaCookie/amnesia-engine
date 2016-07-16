@@ -41,48 +41,43 @@ type wCoordType = | WCoord of Vector.vectorT;
 
 type gCoordType = | GCoord of floatPointType;
 
-type gameStateT = {light: Lightsource.lightsourceT};
+type gameStateT = {light: Lightsource.lightsourceT, light2: Lightsource.lightsourceT};
 
-let toWorldCoord (WCoord {Vector.x, Vector.y}) => (
+let toWorldCoord (WCoord {Vector.x: x, Vector.y: y}) => (
   x /. (windowSizef /. 2.) -. 1.,
   y /. (windowSizef /. 2.) -. 1.
 );
 
-let drawPolygon filled::filled polygon::polygon color::color => {
+let drawPolygon alpha::alpha=1. filled::filled polygon::polygon color::color => {
   let open Polygon;
   if filled {
     GlDraw.begins `polygon
   } else {
     GlDraw.begins `line_loop
   };
-  GlDraw.color color;
-  List.iter
-    GlDraw.vertex2
-    (List.map (fun v => toWorldCoord (WCoord v)) polygon.vertices);
+  GlDraw.color alpha::alpha color;
+  List.iter GlDraw.vertex2 (List.map (fun v => toWorldCoord (WCoord v)) polygon.vertices);
   GlDraw.ends ()
 };
 
-let drawCircle radius::radius color::color position::(GCoord {x, y}) => {
+let drawCircle alpha::alpha=1. radius::radius color::color position::(GCoord {x, y}) => {
   let deg2grad = 3.14159 /. 180.;
   let floatRadius = float_of_int radius;
   GlDraw.begins `triangle_fan;
-  GlDraw.color color;
+  GlDraw.color alpha::alpha color;
   for i in 0 to 360 {
     let degInGrad = float_of_int i *. deg2grad;
     GlDraw.vertex2 @@
       toWorldCoord (
-        WCoord Vector.{
-          x: cos degInGrad *. floatRadius +. x,
-          y: sin degInGrad *. floatRadius +. y
-        }
+        WCoord Vector.{x: cos degInGrad *. floatRadius +. x, y: sin degInGrad *. floatRadius +. y}
       )
   };
   GlDraw.ends ()
 };
 
-let mouseDidMove gameState::gameState x::x y::y => {
-  Lightsource.move_lightsource gameState.light (Vector.create_vector (float_of_int x) (float_of_int (windowSize - y)));
-};
+let mouseDidMove gameState::gameState x::x y::y =>
+  Lightsource.move_lightsource
+    gameState.light (Vector.create_vector (float_of_int x) (float_of_int (windowSize - y)));
 
 let numOfPoints = ref 0;
 
@@ -90,46 +85,44 @@ let prevTime = ref 0.;
 
 let createLightsourceTime = ref 0.;
 
-/* let processTime = ref 0.; */
 let render gameState::gameState () => {
-  /* let curTime = Unix.gettimeofday ();
-  numOfPoints := !numOfPoints + 1;
-  if (curTime -. !prevTime >= 1.) {
-    print_endline @@ ("framerate -> " ^ string_of_int !numOfPoints);
-    print_endline @@ (
-      "average create_lightsource time: " ^
-        string_of_float (!createLightsourceTime /. float_of_int !numOfPoints)
-    );
-    /* print_endline @@ "average process time: " ^ (string_of_float (!processTime /. (float_of_int !numOfPoints))); */
-    numOfPoints := 0;
-    /* processTime := 0.; */
-    createLightsourceTime := 0.;
-    prevTime := curTime
-  }; */
   GlClear.clear [`color];
   GlMat.load_identity ();
-  /* let prevTime = Unix.gettimeofday (); */
-  /* createLightsourceTime := !createLightsourceTime +. (Unix.gettimeofday () -. prevTime); */
-
-/* let light2 =
-   Lightsource.create_lightsource
-     (Vector.create_vector (float_of_int (x + 300)) (float_of_int y)) 200. 1.; */  /* let prevTime = Unix.gettimeofday (); */
-  let polygonList = Lightsource.process lightsource::gameState.light objects::!arrayOfPolygons view::view;
-  /* processTime := !processTime +. (Unix.gettimeofday () -. prevTime); */
-  /* let polygonList2 = Lightsource.process lightsource::light2 objects::!arrayOfPolygons view::view; */
-  ignore @@ List.map (fun p => drawPolygon filled::true polygon::p color::(1., 1., 1.)) polygonList;
+  let polygonList =
+    Lightsource.process lightsource::gameState.light objects::!arrayOfPolygons view::view;
+  let polygonList2 =
+    Lightsource.process lightsource::gameState.light2 objects::!arrayOfPolygons view::view;
+  drawPolygon alpha::0.7 filled::true polygon::view color::(0., 0., 0.);
+  ignore @@
+    List.map
+      (fun p => drawPolygon alpha::0.7 filled::true polygon::p color::(1., 1., 1.)) polygonList;
+  ignore @@
+    List.map
+      (fun p => drawPolygon alpha::0.7 filled::true polygon::p color::(1., 1., 1.)) polygonList2;
   /* ignore @@
-    List.map (fun p => drawPolygon filled::true polygon::p color::(1., 1., 1.)) polygonList2; */
-  /* ignore @@
-    List.map (fun p => drawPolygon filled::false polygon::p color::(0., 1., 0.)) polygonList; */
-  /* ignore @@
-    List.map (fun p => drawPolygon filled::false polygon::p color::(0., 1., 0.)) polygonList2; */
-  {
-    let open Vector;
-    let open Lightsource;
-    drawCircle radius::4 color::(1., 0., 0.) position::(GCoord {x: gameState.light.position.x, y: gameState.light.position.y});
-  };
-  /* drawCircle radius::4 color::(1., 0., 0.) position::(GCoord {x: x + 300, y}); */
+       List.map
+         (fun p => drawPolygon alpha::1. filled::false polygon::p color::(0., 1., 0.)) polygonList;
+     ignore @@
+       List.map
+         (fun p => drawPolygon alpha::1. filled::false polygon::p color::(0., 1., 0.)) polygonList2; */
+  Vector.(
+    Lightsource.(
+      drawCircle
+        alpha::1.
+        radius::4
+        color::(1., 0., 0.)
+        position::(GCoord {x: gameState.light.position.x, y: gameState.light.position.y})
+    )
+  );
+  Vector.(
+    Lightsource.(
+      drawCircle
+        alpha::1.
+        radius::4
+        color::(1., 0., 0.)
+        position::(GCoord {x: gameState.light2.position.x, y: gameState.light2.position.y})
+    )
+  );
   Glut.swapBuffers ()
 };
 
@@ -141,7 +134,10 @@ Glut.initDisplayMode double_buffer::true ();
 
 Glut.createWindow title::"Lights and Shadows";
 
-let gameState = {light: Lightsource.create_lightsource (Vector.create_vector 100. 50.) 200. 1.};
+let gameState = {
+  light: Lightsource.create_lightsource (Vector.create_vector 100. 50.) 400. 1.,
+  light2: Lightsource.create_lightsource (Vector.create_vector 300. 50.) 400. 1.
+};
 
 /* Glut.passiveMotionFunc (mouseDidMove gameState::gameState); */
 GlMat.mode `modelview;
@@ -175,7 +171,12 @@ Glut.idleFunc
               y := !y + 5
             }
           };
-          Lightsource.move_lightsource gameState.light (Vector.create_vector (float_of_int !x) (float_of_int (windowSize - !y)))
+          Lightsource.move_lightsource
+            gameState.light
+            (Vector.create_vector (float_of_int !x) (float_of_int (windowSize - !y)));
+          Lightsource.move_lightsource
+            gameState.light2
+            (Vector.create_vector (float_of_int (!x + 200)) (float_of_int (windowSize - !y)))
         };
         Glut.postRedisplay ()
       }

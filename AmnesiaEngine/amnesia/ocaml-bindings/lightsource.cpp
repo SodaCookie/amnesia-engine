@@ -33,8 +33,7 @@ static void polygon_list_to_std_vector(value list, std::vector<Polygon> *out) {
 }
 
 extern "C" {
-CAMLprim value lightsource_create_lightsource(value vector_position,
-                                              value double_radius,
+CAMLprim value lightsource_create_lightsource(value vector_position, value double_radius,
                                               value double_strength) {
   CAMLparam3(vector_position, double_radius, double_strength);
   CAMLlocal1(record_lightsource);
@@ -45,19 +44,16 @@ CAMLprim value lightsource_create_lightsource(value vector_position,
   CAMLreturn(record_lightsource);
 }
 
-CAMLprim value lightsource_move_lightsource(value lightsource,
-                                            value vector_position) {
+CAMLprim value lightsource_move_lightsource(value lightsource, value vector_position) {
   CAMLparam2(lightsource, vector_position);
   Field(lightsource, 0) = vector_position;
   CAMLreturn(Val_unit);
 }
 
-CAMLprim value lightsource_process(value record_lightsource,
-                                   value list_polygon_objects,
+CAMLprim value lightsource_process(value record_lightsource, value list_polygon_objects,
                                    value polygon_view) {
   CAMLparam3(record_lightsource, list_polygon_objects, polygon_view);
-  CAMLlocal5(polygon_prev_head, list_polygon_head, vector_prev_head,
-             list_vector_head, tmp_polygon);
+  CAMLlocal5(polygon_prev_head, list_polygon_head, vector_prev_head, list_vector_head, tmp_polygon);
   CAMLlocal1(tmp_vector);
   LightSource l = LightSource(Vector_val(Field(record_lightsource, 0)),
                               Double_val(Field(record_lightsource, 1)),
@@ -67,11 +63,11 @@ CAMLprim value lightsource_process(value record_lightsource,
   std::vector<Vector> tmp_vector_list = std::vector<Vector>();
   vector_list_to_std_vector(Field(polygon_view, 0), &tmp_vector_list);
   Polygon polygon = Polygon(tmp_vector_list);
-  auto start = std::chrono::steady_clock::now();
+  // auto start = std::chrono::steady_clock::now();
   std::vector<Polygon> list_polygon = l.process(tmp_polygon_list);
-  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(
-      std::chrono::steady_clock::now() - start);
-  printf("--> %lld\n", duration.count());
+  // auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(
+  //     std::chrono::steady_clock::now() - start);
+  // printf("--> %lld\n", duration.count());
   polygon_prev_head = Val_unit;
   for (Polygon p : list_polygon) {
     vector_prev_head = Val_unit;
