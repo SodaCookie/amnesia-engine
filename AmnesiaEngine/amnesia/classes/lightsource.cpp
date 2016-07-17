@@ -61,9 +61,11 @@ std::vector<Polygon> LightSource::process(std::vector<Polygon> &polygons) {
   }
 
   // Create rays to test
+  double max_length = std::max(max_x - min_x, max_y - min_y) * 2;
   std::vector<Segment> rays = std::vector<Segment>();
   for (const auto &point : points) {
     Vector direction = point - rel_position;
+    direction.set_magnitude(max_length);
     Segment ray_left = Segment(rel_position, direction.rotate(-0.00001));
     Segment ray = Segment(rel_position, direction);
     Segment ray_right = Segment(rel_position, direction.rotate(0.00001));
@@ -79,29 +81,19 @@ std::vector<Polygon> LightSource::process(std::vector<Polygon> &polygons) {
   std::vector<Vector> intersections = std::vector<Vector>();
   Vector intersect;
 
-  for (const auto &ray : rays) {
-    std::pair<bool, Vector> closest_intersection(false, Vector());
-    double closest_magnitude = std::numeric_limits<double>::max();
+  for (auto &ray : rays) {
     for (const auto &segment : segments) {
-      if (segment.intersect_ray(ray, intersect)) {
-        Vector distance = intersect - rel_position;
-        if (!closest_intersection.first or
-            distance.magnitude() <= closest_magnitude) {
-          closest_intersection = std::make_pair(true, distance);
-          closest_magnitude = distance.magnitude();
-        }
+      if (ray.intersect_segment(segment, intersect)) {
+        ray.direction = intersect - ray.anchor;
       }
     }
-    if (closest_intersection.first) {
-      intersections.push_back(closest_intersection.second);
-    }
+    intersections.push_back(Vector(ray.direction));
   }
 
   // Sort intersects by angle
-  std::sort(intersections.begin(), intersections.end(),
-            [](const Vector &i, const Vector &j) -> bool {
-              return i.angle(Vector::right) < j.angle(Vector::right);
-            });
+  std::sort(
+      intersections.begin(), intersections.end(),
+      [](const Vector &i, const Vector &j) -> bool { return i.cross(j) > 0; });
 
   // Calculate light blocks
   std::vector<Polygon> blocks = std::vector<Polygon>();

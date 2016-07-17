@@ -1,4 +1,4 @@
-#include "../primitive/vector.h"
+#include "../amnesia/primitive/vector.h"
 #include <caml/alloc.h>
 #include <caml/custom.h>
 #include <caml/memory.h>
@@ -21,7 +21,8 @@ CAMLprim value vector_magnitude(value record_v) {
 }
 CAMLprim value vector_angle(value record_v1, value record_v2) {
   CAMLparam2(record_v1, record_v2);
-  CAMLreturn(caml_copy_double(Vector_val(record_v1).angle(Vector_val(record_v2))));
+  CAMLreturn(
+      caml_copy_double(Vector_val(record_v1).angle(Vector_val(record_v2))));
 }
 CAMLprim value vector_set_magitude(value record_v, value double_magnitude) {
   CAMLparam2(record_v, double_magnitude);

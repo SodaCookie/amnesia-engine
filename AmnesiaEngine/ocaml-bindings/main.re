@@ -85,13 +85,17 @@ let prevTime = ref 0.;
 
 let createLightsourceTime = ref 0.;
 
+let processTime = ref 0.;
 let render gameState::gameState () => {
   GlClear.clear [`color];
   GlMat.load_identity ();
+  let prevTime = Unix.gettimeofday ();
   let polygonList =
     Lightsource.process lightsource::gameState.light objects::!arrayOfPolygons view::view;
   let polygonList2 =
     Lightsource.process lightsource::gameState.light2 objects::!arrayOfPolygons view::view;
+print_endline @@ "process time: " ^ (string_of_float (!processTime));
+  processTime := Unix.gettimeofday () -. prevTime;
   drawPolygon alpha::0.7 filled::true polygon::view color::(0., 0., 0.);
   ignore @@
     List.map

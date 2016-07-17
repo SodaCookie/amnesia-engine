@@ -1,6 +1,6 @@
-#include "../primitive/polygon.h"
-#include "../primitive/segment.h"
-#include "../primitive/vector.h"
+#include "../amnesia/primitive/polygon.h"
+#include "../amnesia/primitive/segment.h"
+#include "../amnesia/primitive/vector.h"
 #include <caml/alloc.h>
 #include <caml/custom.h>
 #include <caml/memory.h>

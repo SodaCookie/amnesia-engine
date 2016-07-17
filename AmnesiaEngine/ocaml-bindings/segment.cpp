@@ -1,12 +1,12 @@
-#include "../primitive/segment.h"
-#include "../primitive/vector.h"
+#include "../amnesia/primitive/segment.h"
+#include "../amnesia/primitive/vector.h"
 #include <caml/alloc.h>
 #include <caml/custom.h>
 #include <caml/memory.h>
 #include <caml/mlvalues.h>
 
-#define Segment_val(v)                                                                             \
-  Segment(Vector(Double_field(Field(v, 0), 0), Double_field(Field(v, 0), 1)),                      \
+#define Segment_val(v)                                                         \
+  Segment(Vector(Double_field(Field(v, 0), 0), Double_field(Field(v, 0), 1)),  \
           Vector(Double_field(Field(v, 1), 0), Double_field(Field(v, 1), 1)))
 // Ripped from ctypes
 #define Val_none Val_int(0)
@@ -21,7 +21,8 @@ static value Val_some(value v) {
 }
 
 extern "C" {
-CAMLprim value segment_create_segment(value vector_anchor, value vector_direction) {
+CAMLprim value segment_create_segment(value vector_anchor,
+                                      value vector_direction) {
   CAMLparam2(vector_anchor, vector_direction);
   CAMLlocal1(record_segment);
   record_segment = caml_alloc_small(2, 0);
