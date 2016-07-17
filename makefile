@@ -1,5 +1,5 @@
 CXX						:= g++
-CXXFLAGS			:= -Wall -pedantic --std=c++11 -O3 -stdlib=libc++
+CXXFLAGS			:= -Wall -g -pedantic --std=c++11 -O3 -stdlib=libc++
 BUILDFOLDER 	:= _build
 CPP_FILES 		:= $(shell find ./amnesia -name '*.cpp')
 SRCDIRS 			:= $(patsubst ./%,$(BUILDFOLDER)/%,$(shell find ./amnesia -name '*.cpp' -exec dirname {} \; | uniq))
@@ -14,7 +14,6 @@ $(BUILDFOLDER)/%.o: %.cpp %.h | $(BUILDFOLDER)
 
 $(BUILDFOLDER):
 	mkdir $(BUILDFOLDER)
-	echo $(SRCDIRS)
 	$(foreach var,$(SRCDIRS:./%=./$(BUILDFOLDER)/%),mkdir -p $(var);)
 
 .PHONY: clean

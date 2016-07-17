@@ -33,8 +33,7 @@ std::vector<Polygon> LightSource::process(std::vector<Polygon> &polygons) {
   // Add current points and segments
 
   for (auto &polygon : polygons) {
-    // if (camera_bound.intersect_rect(polygon.bounding_rect)) {
-    if (true) {
+    if (camera_bound.intersect_rect(polygon.bounding_rect)) {
       for (const auto &point : polygon.get_vertices()) {
         min_x = std::min(min_x, point.x);
         max_x = std::max(max_x, point.x);
