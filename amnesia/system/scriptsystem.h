@@ -2,7 +2,7 @@
 #define _AMNESIA_SCRIPTSYSTEM_HEADER_
 
 #include "../classes/script.h"
-#include "system.h"
+#include "../core/system.h"
 #include <list>
 #include <memory>
 

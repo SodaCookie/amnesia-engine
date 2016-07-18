@@ -10,9 +10,10 @@ void init() {
   Engine->Window.width = 800;
   Engine->Window.height = 600;
 
+  Engine->add_system(std::make_shared<ScriptSystem>());
+
   std::shared_ptr<Entity> e1 = Engine->create_entity("test");
-  auto script = std::shared_ptr<CharacterScript>(new CharacterScript());
-  e1->add_script(script);
+  e1->add_component<CharacterScript>();
 }
 
 int main(int argc, char *argv[]) {

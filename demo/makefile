@@ -1,6 +1,6 @@
 CXX						:= g++
 INCLUDES 			:= -I./../amnesia
-CXXFLAGS			:= -Wall -g -pedantic --std=c++11 -O3 -stdlib=libc++ $(INCLUDES)
+CXXFLAGS			:= -Wall -g -pedantic --std=c++11 -stdlib=libc++ $(INCLUDES)
 LFLAGS 				:= $(CXXFLAGS) -L./../_build/ -lamnesia -lSDL2
 BUILDFOLDER 	:= _build
 CPP_FILES 		:= $(shell find . -name '*.cpp')
@@ -21,3 +21,4 @@ $(BUILDFOLDER):
 .PHONY: clean
 clean:
 	rm -rf $(BUILDFOLDER)
+	rm demo

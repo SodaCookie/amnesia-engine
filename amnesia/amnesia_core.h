@@ -12,4 +12,7 @@
 #include "core/message.h"
 #include "core/system.h"
 
+// Usually Systems to add
+#include "system/scriptsystem.h"
+
 #endif

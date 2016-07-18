@@ -1,5 +1,5 @@
 CXX						:= g++
-CXXFLAGS			:= -Wall -g -pedantic --std=c++11 -O3 -stdlib=libc++
+CXXFLAGS			:= -Wall -g -pedantic --std=c++11 -stdlib=libc++
 BUILDFOLDER 	:= _build
 CPP_FILES 		:= $(shell find ./amnesia -name '*.cpp')
 SRCDIRS 			:= $(patsubst ./%,$(BUILDFOLDER)/%,$(shell find ./amnesia -name '*.cpp' -exec dirname {} \; | uniq))

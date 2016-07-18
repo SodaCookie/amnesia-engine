@@ -4,7 +4,6 @@
 #include "../classes/entity.h"
 #include "input.h"
 #include "message.h"
-#include "script.h"
 #include "time.h"
 #include "window.h"
 #include <map>
@@ -23,6 +22,8 @@ public:
 
   void add_entity(std::shared_ptr<Entity> e);
 
+  std::shared_ptr<System> get_system(std::string name);
+
   std::shared_ptr<Entity> create_entity(std::string name);
 
   std::shared_ptr<Entity> find(std::string name);
@@ -36,7 +37,6 @@ public:
   WindowSystem Window;
   InputSystem Input;
   TimeSystem Time;
-  ScriptSystem Script;
   std::map<std::string, std::shared_ptr<Entity>> Entities;
 
 private:

@@ -6,13 +6,16 @@ GameEngine::GameEngine() {
   Window = WindowSystem();
   Input = InputSystem();
   Time = TimeSystem();
-  Script = ScriptSystem();
   running = false;
 }
 
 void GameEngine::add_system(std::shared_ptr<System> system) {
   system->Engine = shared_from_this();
   systems[system->name] = system;
+}
+
+std::shared_ptr<System> GameEngine::get_system(std::string name) {
+  return systems[name];
 }
 
 void GameEngine::add_entity(std::shared_ptr<Entity> e) {
@@ -41,13 +44,11 @@ void GameEngine::run() {
   Window.Engine = shared_from_this();
   Input.Engine = shared_from_this();
   Time.Engine = shared_from_this();
-  Script.Engine = shared_from_this();
 
   // Initiate
   Window.init();
   Input.init();
   Time.init();
-  Script.init();
 
   for (auto system : systems) {
     system.second->init();
@@ -66,7 +67,6 @@ void GameEngine::run() {
     Window.update();
     Input.update();
     Time.update();
-    Script.update();
     for (auto system : systems) {
       system.second->update();
     }
@@ -79,7 +79,6 @@ void GameEngine::run() {
     system.second->quit();
   }
 
-  Script.quit();
   Time.quit();
   Input.quit();
   Window.quit();

@@ -3,10 +3,10 @@
 
 #include "component.h"
 
-class Script : public Component {
+class Script : public Component, public std::enable_shared_from_this<Script> {
 
 public:
-  bool destroy = false;
+  void init() override;
   virtual void update() = 0;
 };
 
