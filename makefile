@@ -1,9 +1,9 @@
-CXX						:= g++
-CXXFLAGS			:= -Wall -g -pedantic --std=c++11 -stdlib=libc++
-BUILDFOLDER 	:= _build
-CPP_FILES 		:= $(shell find ./amnesia -name '*.cpp')
-SRCDIRS 			:= $(patsubst ./%,$(BUILDFOLDER)/%,$(shell find ./amnesia -name '*.cpp' -exec dirname {} \; | uniq))
-OBJECTS   		:= $(patsubst %,$(BUILDFOLDER)%,$(CPP_FILES:.%.cpp=%.o))
+CXX           := g++
+CXXFLAGS      := -Wall -g -pedantic --std=c++11 -stdlib=libc++
+BUILDFOLDER   := _build
+CPP_FILES     := $(shell find ./amnesia -name '*.cpp')
+SRCDIRS       := $(patsubst ./%,$(BUILDFOLDER)/%,$(shell find ./amnesia -name '*.cpp' -exec dirname {} \; | uniq))
+OBJECTS       := $(patsubst %,$(BUILDFOLDER)%,$(CPP_FILES:.%.cpp=%.o))
 STATICLIBNAME := libamnesia.a
 
 main: $(OBJECTS)
