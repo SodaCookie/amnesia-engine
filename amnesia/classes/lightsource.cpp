@@ -18,7 +18,7 @@ LightSource::LightSource(Vector position, double radius, double strength)
 
 void LightSource::move(Vector new_position) { position = new_position; }
 
-std::vector<Polygon> LightSource::process(std::vector<Polygon> &polygons) {
+std::vector<Vector> LightSource::process(std::vector<Polygon> &polygons) {
   std::vector<Segment> segments = std::vector<Segment>();
   std::vector<Vector> points = std::vector<Vector>();
   Vector rel_position = position; // + owner->transform;
@@ -86,7 +86,7 @@ std::vector<Polygon> LightSource::process(std::vector<Polygon> &polygons) {
         ray.direction = intersect - ray.anchor;
       }
     }
-    intersections.push_back(Vector(ray.direction));
+    intersections.push_back(Vector(ray.direction + ray.anchor));
   }
 
   // Sort intersects by angle
@@ -94,16 +94,5 @@ std::vector<Polygon> LightSource::process(std::vector<Polygon> &polygons) {
       intersections.begin(), intersections.end(),
       [](const Vector &i, const Vector &j) -> bool { return i.cross(j) > 0; });
 
-  // Calculate light blocks
-  std::vector<Polygon> blocks = std::vector<Polygon>();
-  for (unsigned int i = 0; i < intersections.size(); i++) {
-    std::vector<Vector> triangle_points = std::vector<Vector>();
-    triangle_points.push_back(rel_position);
-    triangle_points.push_back(intersections[i] + rel_position);
-    triangle_points.push_back(intersections[(i + 1) % intersections.size()] +
-                              rel_position);
-    blocks.push_back(Polygon(triangle_points));
-  }
-
-  return blocks;
+  return intersections;
 }
